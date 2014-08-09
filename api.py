@@ -50,7 +50,7 @@ class PixivSearch:
             self.keyword = keyword
             self.page = page
             self.mode = mode
-            self.order = False
+            self.order = ''
         else:
             raise Exception('The API object given was not valid')
 
@@ -58,8 +58,8 @@ class PixivSearch:
         self.keyword = keyword
         self.page = 1
 
-    def set_order(self):
-        self.order = not self.order
+    def set_order(self, order=''):
+        self.order = order
 
     def set_page(self, page):
         self.page = page
@@ -76,7 +76,7 @@ class PixivSearch:
                   'word': self.keyword,
                   'p': self.page,
                   's_mode': self.mode,
-                  'order' : 'date' if self.order else None,
+                  'order' : self.order,
                   }
 
         request = urllib2.Request(PIXIV_SEARCH_URL + '?' + urllib.urlencode(values), headers=headers)
