@@ -123,7 +123,10 @@ class MySQLdbManager:
         col = ', '.join(list(map(lambda x: x, param)))
         value = ', '.join(list(map(lambda x: '%s', param)))
 
-        sql = """INSERT IGNORE INTO px_illust(%s) VALUES(%s)""" % (col, value)
+        sql = """INSERT INTO px_illust(%s) VALUES(%s)
+                 ON DUPLICATE KEY
+                 UPDATE tags = VALUES(tags), preview = VALUES(preview), score = VALUES(score), reviewer = VALUES(reviewer), description = VALUES(description)
+                 """ % (col, value)
 
         self.cursors.execute(sql, param.values())
         self.connect.commit()
