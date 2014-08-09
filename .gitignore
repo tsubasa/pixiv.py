@@ -1,0 +1,17 @@
+# file
+_*
+!__*
+
+# exts
+*.ini
+*.cfg
+*.inc.php
+*.log
+*.org
+*.py[cod]
+!.gitignore
+!.gitkeep
+
+# dir
+private/
+

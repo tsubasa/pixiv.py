@@ -1,0 +1,15 @@
+[mysql]
+host=localhost
+user=
+passwd=
+db=pixiv
+
+[pixiv]
+user=
+passwd=
+referer=http://spapi.pixiv.net/
+user_agent=Mozilla/5.0 (iPhone; CPU iPhone OS 7_0 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11A465 Safari/9537.53
+
+[common]
+log_file=/tmp/pixiv_bot.log
+timeout=5
