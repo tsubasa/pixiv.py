@@ -13,6 +13,7 @@ from handlers import RedirectCatchHeader
 USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'
 
 PIXIV_LOGIN_URL = 'https://www.secure.pixiv.net/login.php'
+PIXIV_ILLUST_URL = 'http://spapi.pixiv.net/iphone/illust.php'
 PIXIV_SEARCH_URL = 'http://spapi.pixiv.net/iphone/search.php'
 PIXIV_SP_REFERRER = 'http://spapi.pixiv.net/'
 PIXIV_SP_SEARCH_MAX_PAGE = 200
@@ -42,7 +43,33 @@ class PixivApi(object):
         except:
             raise Exception('Login error')
 
-class PixivSearch:
+class PixivIllustLookup(object):
+
+    def __init__(self, api, content='all'):
+        if (isinstance(api, PixivApi)):
+            self.api = api
+            self.content = content
+        else:
+            raise Exception('The API object given was not valid')
+
+    def illust(self, id):
+        headers = {'User-Agent': USER_AGENT,
+                   'Cookie': 'PHPSESSID=' + self.api.phpsess}
+        values = {'PHPSESSID': self.api.phpsess,
+                  'content': self.content,
+                  'illust_id': id,
+                  }
+
+        request = urllib2.Request(PIXIV_ILLUST_URL + '?' + urllib.urlencode(values), headers=headers)
+        opener = urllib2.build_opener()
+
+        try:
+            response = opener.open(request)
+            return response.read()
+        except Exception as e:
+            raise Exception(e)
+
+class PixivSearch(object):
 
     def __init__(self, api, keyword='', page=1, mode='s_tag'):
         if (isinstance(api, PixivApi)):
@@ -96,7 +123,7 @@ class PixivSearch:
         self.page -= 1
         return self.search()
 
-class PixivResultParser:
+class PixivResultParser(object):
 
     def __init__(self, data):
         self.rows = list(csv.reader(cStringIO.StringIO(data)))
@@ -106,13 +133,34 @@ class PixivResultParser:
         else:
             raise Exception('No data')
 
+    """
+    id              : row[0]
+    user_id         : row[1]
+    extension       : row[2]
+    title           : row[3]
+    prefix          : row[4]
+    post_name       : row[5]
+    posted_at       : row[12]
+    tags            : row[13]
+    tools           : row[14]
+    reviewer        : row[15]
+    score           : row[16]
+    preview         : row[17]
+    description     : row[18]
+    page            : row[19]
+    bookmark        : row[22]
+    user_id_name    : row[24]
+    r18             : row[26]
+    """
+
     def get_row_all(self):
         return self.rows
 
     def get_row(self):
-        row = self.rows[self.cursor]
-        self._next()
-        return row
+        return self.rows[self.cursor]
+
+    def get_tag(self):
+        return self.rows[self.cursor][13].split()
 
     def get_image_url_all(self):
         img_list = []
@@ -121,9 +169,7 @@ class PixivResultParser:
         return img_list
 
     def get_image_url(self):
-        row = self.rows[self.cursor]
-        self._next()
-        return self.parse_image_url(row)
+        return self.parse_image_url(self.rows[self.cursor])
 
     def parse_image_url(self, data):
         img_list = []
@@ -134,10 +180,10 @@ class PixivResultParser:
             img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img' + data[4] + '/img/' + data[24] + '/' + data[0] + '.' + data[2])
         return img_list
 
-    def _next(self):
+    def next(self):
         if self.cursor < self.size:
             self.cursor += 1
 
-    def _prev(self):
+    def prev(self):
         if self.cursor:
             self.cursor -= 1
