@@ -63,25 +63,6 @@ class MySQLdbManager:
         self.cursors.execute(sql, param)
 
     """
-    `id` int(12) unsigned NOT NULL,
-    `user_id` int(12) unsigned NOT NULL,
-    `user_id_name` varchar(20) NOT NULL,
-    `title` varchar(255) NOT NULL,
-    `description` text NULL,
-    `post_name` varchar(50) NOT NULL,
-    `posted_at` timestamp NULL DEFAULT NULL,
-    `extension` varchar(10) NOT NULL,
-    `prefix` int(4) NOT NULL,
-    `tags` varchar(255) NULL,
-    `tools` varchar(100) NULL,
-    `page` int(4) NULL,
-    `preview` int(10) NOT NULL DEFAULT 0,
-    `score` int(10) NOT NULL DEFAULT 0,
-    `reviewer` int(10) NOT NULL DEFAULT 0,
-    `r18` tinyint(1) NOT NULL DEFAULT FALSE,
-    `saved_at`  timestamp NULL,
-    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
     id              : data[0]
     user_id         : data[1]
     user_id_name    : data[24]
@@ -89,6 +70,7 @@ class MySQLdbManager:
     description     : data[18]
     post_name       : data[5]
     posted_at       : data[12]
+    thumb           : data[6]
     extension       : data[2]
     prefix          : data[4]
     tags            : data[13]
@@ -97,6 +79,7 @@ class MySQLdbManager:
     preview         : data[17]
     score           : data[16]
     reviewer        : data[15]
+    bookmark        : data[22]
     r18             : data[26]
     """
 
@@ -110,6 +93,7 @@ class MySQLdbManager:
         param['description'] = data[18]
         param['post_name'] = data[5]
         param['posted_at'] = data[12]
+        param['thumb'] = data[6]
         param['extension'] = data[2]
         param['prefix'] = data[4]
         param['tags'] = data[13]
@@ -118,6 +102,7 @@ class MySQLdbManager:
         param['preview'] = data[17]
         param['score'] = data[16]
         param['reviewer'] = data[15]
+        param['bookmark'] = data[22]
         param['r18'] = True if int(data[26]) else False
 
         col = ', '.join(list(map(lambda x: x, param)))
@@ -125,14 +110,14 @@ class MySQLdbManager:
 
         sql = """INSERT INTO px_illust(%s) VALUES(%s)
                  ON DUPLICATE KEY
-                 UPDATE tags = VALUES(tags), preview = VALUES(preview), score = VALUES(score), reviewer = VALUES(reviewer), description = VALUES(description)
+                 UPDATE tags = VALUES(tags), preview = VALUES(preview), score = VALUES(score), reviewer = VALUES(reviewer), description = VALUES(description), bookmark = VALUES(bookmark)
                  """ % (col, value)
 
         self.cursors.execute(sql, param.values())
         self.connect.commit()
 
     def get_not_saved(self):
-        self.cursors.execute("""SELECT id, user_id, user_id_name, extension, prefix, page FROM px_illust WHERE saved_at IS NULL AND deleted_at IS NULL LIMIT 1000""")
+        self.cursors.execute("""SELECT id, user_id, user_id_name, extension, prefix, page, thumb, posted_at FROM px_illust WHERE saved_at IS NULL AND deleted_at IS NULL LIMIT 1000""")
         return self.cursors.fetchall()
 
     # イラストダウンロードフラグ

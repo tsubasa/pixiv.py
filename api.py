@@ -176,6 +176,8 @@ class PixivResultParser(object):
         if data[19]:
             for page in range(0, int(data[19])):
                 img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img' + data[4] + '/img/' + data[24] + '/' + data[0] + '_big_p' + str(page) + '.' + data[2])
+        elif 'img-master' in data[6]:
+            img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img-zip-ugoira/img/' + re.sub(r'( |-|:)', '/', data[12]) + '/' + data[0] + '_ugoira600x600.zip')
         else:
             img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img' + data[4] + '/img/' + data[24] + '/' + data[0] + '.' + data[2])
         return img_list
