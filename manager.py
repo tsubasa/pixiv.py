@@ -117,7 +117,7 @@ class MySQLdbManager:
         self.connect.commit()
 
     def get_not_saved(self):
-        self.cursors.execute("""SELECT id, user_id, user_id_name, extension, prefix, page, thumb, posted_at FROM px_illust WHERE saved_at IS NULL AND deleted_at IS NULL LIMIT 1000""")
+        self.cursors.execute("""SELECT id, user_id, user_id_name, extension, prefix, page, thumb, posted_at, tags FROM px_illust WHERE saved_at IS NULL AND deleted_at IS NULL LIMIT 1000""")
         return self.cursors.fetchall()
 
     # イラストダウンロードフラグ
