@@ -183,7 +183,7 @@ class PixivUtils(object):
             if page:
                 # http://i1.pixiv.net/img-original/img/2014/10/01/21/51/02/{illust_id}_p0.jpg
                 # http://i1.pixiv.net/img-original/img/2014/10/01/21/51/02/{illust_id}_p1.jpg ...
-                for p in range(0, page):
+                for p in range(0, int(page)):
                     img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-original/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_p' + str(p) + '.' + ext)
             elif 'うごイラ' in tags:
                 img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-zip-ugoira/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_ugoira600x600.zip')
@@ -218,25 +218,39 @@ class PixivModel(object):
 class PixivIllustModel(PixivModel):
 
     """
-    id              : row[0]
-    user_id         : row[1]
-    user_id_name    : row[24]
-    title           : row[3]
-    description     : row[18]
-    post_name       : row[5]
-    posted_at       : row[12]
-    thumb           : row[6]
-    extension       : row[2]
-    prefix          : row[4]
-    tags            : row[13]
-    tools           : row[14]
-    page            : row[19]
-    preview         : row[17]
-    score           : row[16]
-    reviewer        : row[15]
-    bookmark        : row[22]
-    r18             : row[26]
+    :param row[0]   : illust_id
+    :param row[1]   : user_id
+    :param row[2]   : extension
+    :param row[3]   : image title
+    :param row[4]   : image directory prefix
+    :param row[5]   : post_name
+    :param row[6]   : mobile thumbnail (128x128) /img-inf/ or /img-master/
+    :param row[7]   : unused/empty
+    :param row[8]   : unused/empty
+    :param row[9]   : mobile thumbnail (480mw)
+    :param row[10]  : unused/empty
+    :param row[11]  : unused/empty
+    :param row[12]  : upload date
+    :param row[13]  : space-delimited list of tags
+    :param row[14]  : drawing software (e.g. SAI)
+    :param row[15]  : number of ratings
+    :param row[16]  : total score (sum of all ratings)
+    :param row[17]  : number of views
+    :param row[18]  : image description (raw HTML)
+    :param row[19]  : number of pages (empty if not a manga sequence)
+    :param row[20]  : unused/empty
+    :param row[21]  : unused/empty
+    :param row[22]  : number of favorites
+    :param row[23]  : number of comments
+    :param row[24]  : artist username
+    :param row[25]  : unused/empty
+    :param row[26]  : R-18 marker (0 is safe, 1 is R-18, 2 is R-18G)
+    :param row[27]  : novel series id (blank for illustrations and novels not part of a series)
+    :param row[28]  : unused/empty
+    :param row[29]  : mobile profile image
+    :param row[30]  : unused/empty
     """
+    # @see https://danbooru.donmai.us/wiki_pages/58938#Explanation of result fields for works
 
     @classmethod
     def parse(cls, row):
@@ -256,7 +270,7 @@ class PixivIllustModel(PixivModel):
         setattr(cls, 'score', row[16])
         setattr(cls, 'reviewer', row[15])
         setattr(cls, 'bookmark', row[22])
-        setattr(cls, 'r18', row[26] if True else False)
+        setattr(cls, 'r18', row[26])
         setattr(cls, 'tags', row[13].split())
         setattr(cls, 'imgs', PixivUtils.abs_img_url(row[0], row[24], row[2], row[4], row[19], row[6], row[12], row[13]))
         return cls
