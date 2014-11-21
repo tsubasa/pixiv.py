@@ -22,8 +22,10 @@ def pixiv_bot():
     for result in PixivIllustSearch(api, keyword=args.keyword, page=args.page):
         for illust in PixivResultParser(result):
             print illust
-            print illust.illust_id, illust.title, illust.post_name
-            print illust.tags, illust.imgs
+            print 'id   : %s' % (illust.illust_id,)
+            print 'title: %s by %s (%s)' % (illust.title, illust.post_name, illust.user_name)
+            print 'tags : %s' % (', '.join(illust.tags),)
+            print illust.imgs
             # object data
 
 if __name__ == '__main__':
