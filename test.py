@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from api import PixivApi, PixivIllustLookup, PixivIllustSearch, PixivResultParser, PixivNovelSearch, PixivNovelLookup
+from api import PixivApi, PixivIllustLookup, PixivIllustSearch, PixivResultParser, PixivNovelSearch, PixivNovelLookup, PixivUserSearch
 from config import config, args
 
 def pixiv_bot():
@@ -26,6 +26,12 @@ def pixiv_bot():
         for novel in PixivResultParser(result):
             print novel
             print 'id: %s title: %s by %s (%s)' % (novel.id, novel.title, novel.post_name, novel.user_name)
+
+    # ユーザー検索
+    for result in PixivUserSearch(api, keyword='まどか', page=1):
+        for user in PixivResultParser(result):
+            print user
+            print 'id: %s user_name: %s (%s)' % (user.user_id, user.post_name, user.user_name)
 
 if __name__ == '__main__':
     pixiv_bot()
