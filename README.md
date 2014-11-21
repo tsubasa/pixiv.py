@@ -1,11 +1,12 @@
-# PixivƒXƒNƒŠƒvƒg
+# PixivAPI
 
-PixivƒXƒNƒŠƒvƒg
+PixivAPI
 
- * ƒL[ƒ[ƒhiƒ^ƒOj‚©‚çŒŸõ‚µAŒŸõŒ‹‰Ê‚ðƒf[ƒ^ƒx[ƒX‚ÖŠi”[
+ * ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰ï¼ˆã‚¿ã‚°ï¼‰ã‹ã‚‰ã‚¤ãƒ©ã‚¹ãƒˆæ¤œç´¢
+ * ã‚¤ãƒ©ã‚¹ãƒˆIDã‹ã‚‰ã‚¤ãƒ©ã‚¹ãƒˆè©³ç´°å–å¾—
 
 usage:
 
 ```
-python pixiv.py -h
+python test.py -h
 ```

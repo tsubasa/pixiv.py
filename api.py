@@ -10,118 +10,146 @@ import random
 
 from handlers import RedirectCatchHeader
 
-USER_AGENT = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'
-
-PIXIV_LOGIN_URL = 'https://www.secure.pixiv.net/login.php'
-PIXIV_ILLUST_URL = 'http://spapi.pixiv.net/iphone/illust.php'
-PIXIV_SEARCH_URL = 'http://spapi.pixiv.net/iphone/search.php'
 PIXIV_SP_REFERRER = 'http://spapi.pixiv.net/'
-PIXIV_SP_SEARCH_MAX_PAGE = 200
 
 class PixivApi(object):
 
-    def __init__(self, user, passwd):
-        self.phpsess = self.login(user, passwd)
+    def __init__(self, user, passwd, scheme='http', host='spapi.pixiv.net',
+                 ua='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'):
+        self.scheme = scheme
+        self.host = host
+        self.ua = ua
+        self.phpsess = self._login(user, passwd)
 
-    def login(self, user, passwd):
-        headers = {'User-Agent': USER_AGENT}
+    def _login(self, user, passwd):
+        headers = {'User-Agent': self.ua}
         values = {'mode': 'login',
                   'pass': passwd,
                   'pixiv_id': user,
                   'skip': '1',
                   }
 
-        request = urllib2.Request(PIXIV_LOGIN_URL, urllib.urlencode(values), headers=headers)
+        request = urllib2.Request(self.login, urllib.urlencode(values), headers=headers)
         opener = urllib2.build_opener(RedirectCatchHeader)
         try:
-            response = opener.open(request)
+            opener.open(request)
         except urllib2.HTTPError as e:
             headers = e.info()
 
         try:
             return re.findall('PHPSESSID=(.*?);', headers['Set-Cookie'])[0]
         except:
-            raise Exception('Login error')
+            raise Exception('セッション取得エラー')
+
+    @property
+    def login(self):
+        return 'https://www.secure.pixiv.net/login.php'
+
+    @property
+    def illust(self):
+        return ''.join([self.scheme, '://', self.host, '/iphone/illust.php'])
+
+    @property
+    def search(self):
+        return ''.join([self.scheme, '://', self.host, '/iphone/search.php'])
 
 class PixivIllustLookup(object):
 
     def __init__(self, api, content='all'):
         if (isinstance(api, PixivApi)):
-            self.api = api
+            self._api = api
             self.content = content
         else:
-            raise Exception('The API object given was not valid')
+            raise Exception('PixivApiオブジェクトではありません')
 
-    def illust(self, id):
-        headers = {'User-Agent': USER_AGENT,
-                   'Cookie': 'PHPSESSID=' + self.api.phpsess}
-        values = {'PHPSESSID': self.api.phpsess,
+    def lookup(self, illust_id):
+        headers = {'User-Agent': self._api.ua,
+                   'Cookie': 'PHPSESSID=' + self._api.phpsess}
+        values = {'PHPSESSID': self._api.phpsess,
                   'content': self.content,
-                  'illust_id': id,
+                  'illust_id': illust_id,
                   }
 
-        request = urllib2.Request(PIXIV_ILLUST_URL + '?' + urllib.urlencode(values), headers=headers)
+        request = urllib2.Request('?'.join([self._api.illust, urllib.urlencode(values)]), headers=headers)
         opener = urllib2.build_opener()
 
         try:
-            response = opener.open(request)
-            return response.read()
-        except Exception as e:
-            raise Exception(e)
+            return opener.open(request).read()
+        except:
+            raise None
 
-class PixivSearch(object):
+class PixivIllustSearch(object):
 
-    def __init__(self, api, keyword='', page=1, mode='s_tag'):
+    PIXIV_SP_SEARCH_MAX_PAGE = 200
+
+    def __init__(self, api, keyword='', page=1, order='', scd='', mode='s_tag'):
         if (isinstance(api, PixivApi)):
-            self.api = api
+            self._api = api
             self.keyword = keyword
             self.page = page
             self.mode = mode
-            self.order = ''
+            self.order = order
+            self.scd = scd
         else:
-            raise Exception('The API object given was not valid')
+            raise Exception('PixivApiオブジェクトではありません')
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
+            raise StopIteration
+
+        try:
+            return self.search()
+        finally:
+            self.page += 1
 
     def set_keyword(self, keyword):
         self.keyword = keyword
         self.page = 1
 
     def set_order(self, order=''):
+        """
+        :param order: 並び順 [None] 新しい順, [date] 古い順
+        """
         self.order = order
 
+    def set_scd(self, scd=''):
+        """
+        :param scd: 指定日から現在までの投稿期間 [YYYY-MM-DD]
+        """
+        self.scd = scd
+
     def set_page(self, page):
-        self.page = page
+        if isinstance(page, int):
+            self.page = page
+        else:
+            raise TypeError('Not Numeric')
 
     def search(self, keyword=''):
-        if self.page > PIXIV_SP_SEARCH_MAX_PAGE:
-            return False
-
         self.keyword = keyword if keyword else self.keyword
 
-        headers = {'User-Agent': USER_AGENT,
-                   'Cookie': 'PHPSESSID=' + self.api.phpsess}
-        values = {'PHPSESSID': self.api.phpsess,
+        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
+            return None
+
+        headers = {'User-Agent': self._api.ua,
+                   'Cookie': 'PHPSESSID=' + self._api.phpsess}
+        values = {'PHPSESSID': self._api.phpsess,
                   'word': self.keyword,
                   'p': self.page,
                   's_mode': self.mode,
-                  'order' : self.order,
+                  'order': self.order,
+                  'scd': self.scd,
                   }
 
-        request = urllib2.Request(PIXIV_SEARCH_URL + '?' + urllib.urlencode(values), headers=headers)
+        request = urllib2.Request('?'.join([self._api.search, urllib.urlencode(values)]), headers=headers)
         opener = urllib2.build_opener()
 
         try:
-            response = opener.open(request)
-            return response.read()
-        except Exception as e:
-            raise Exception(e)
-
-    def next(self):
-        self.page += 1
-        return self.search()
-
-    def prev(self):
-        self.page -= 1
-        return self.search()
+            return opener.open(request).read()
+        except Exception:
+            return None
 
 class PixivResultParser(object):
 
@@ -133,59 +161,102 @@ class PixivResultParser(object):
         else:
             raise Exception('No data')
 
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.size <= self.cursor:
+            raise StopIteration
+
+        try:
+            return PixivIllustModel.parse(self.rows[self.cursor])
+        finally:
+            self.cursor += 1
+
+class PixivUtils(object):
+
+    @staticmethod
+    def abs_img_url(illust_id, user_name, ext, prefix, page, thumb, posted_at, tags):
+        img_list = []
+
+        if thumb and 'img-master' in thumb:
+            if page:
+                # http://i1.pixiv.net/img-original/img/2014/10/01/21/51/02/{illust_id}_p0.jpg
+                # http://i1.pixiv.net/img-original/img/2014/10/01/21/51/02/{illust_id}_p1.jpg ...
+                for p in range(0, page):
+                    img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-original/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_p' + str(p) + '.' + ext)
+            elif 'うごイラ' in tags:
+                img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-zip-ugoira/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_ugoira600x600.zip')
+            else:
+                # http://i2.pixiv.net/img-original/img/2014/10/02/07/46/59/{illust_id}_p0.jpg
+                img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-original/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_p0' + '.' + ext)
+
+        elif thumb and 'img-inf' in thumb:
+            if page:
+                for p in range(0, int(page)):
+                    img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img' + str(prefix).zfill(2) + '/img/' + user_name + '/' + str(illust_id) + '_big_p' + str(p) + '.' + ext)
+            else:
+                # http://i1.pixiv.net/img{prefix}/img/{user_name}/{illust_id}.jpg
+                img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img' + str(prefix).zfill(2) + '/img/' + user_name + '/' + str(illust_id) + '.' + ext)
+
+        return img_list
+
+class PixivModel(object):
+
+    @classmethod
+    def parse(cls, row):
+        raise NotImplementedError
+
+    @classmethod
+    def parse_list(cls, rows):
+        results = []
+        for row in rows:
+            if row:
+                results.append(cls.parse(row))
+        return results
+
+class PixivIllustModel(PixivModel):
+
     """
     id              : row[0]
     user_id         : row[1]
-    extension       : row[2]
+    user_id_name    : row[24]
     title           : row[3]
-    prefix          : row[4]
+    description     : row[18]
     post_name       : row[5]
     posted_at       : row[12]
+    thumb           : row[6]
+    extension       : row[2]
+    prefix          : row[4]
     tags            : row[13]
     tools           : row[14]
-    reviewer        : row[15]
-    score           : row[16]
-    preview         : row[17]
-    description     : row[18]
     page            : row[19]
+    preview         : row[17]
+    score           : row[16]
+    reviewer        : row[15]
     bookmark        : row[22]
-    user_id_name    : row[24]
     r18             : row[26]
     """
 
-    def get_row_all(self):
-        return self.rows
-
-    def get_row(self):
-        return self.rows[self.cursor]
-
-    def get_tag(self):
-        return self.rows[self.cursor][13].split()
-
-    def get_image_url_all(self):
-        img_list = []
-        for num in range(0, self.size):
-            img_list += self.parse_image_url(self.rows[num])
-        return img_list
-
-    def get_image_url(self):
-        return self.parse_image_url(self.rows[self.cursor])
-
-    def parse_image_url(self, data):
-        img_list = []
-        if data[19]:
-            for page in range(0, int(data[19])):
-                img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img' + data[4] + '/img/' + data[24] + '/' + data[0] + '_big_p' + str(page) + '.' + data[2])
-        elif 'img-master' in data[6] and 'うごイラ' in data[13]:
-            img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img-zip-ugoira/img/' + re.sub(r'( |-|:)', '/', data[12]) + '/' + data[0] + '_ugoira600x600.zip')
-        else:
-            img_list.append('http://i' + str(random.randint(1,2)) + '.pixiv.net/img' + data[4] + '/img/' + data[24] + '/' + data[0] + '.' + data[2])
-        return img_list
-
-    def next(self):
-        if self.cursor < self.size:
-            self.cursor += 1
-
-    def prev(self):
-        if self.cursor:
-            self.cursor -= 1
+    @classmethod
+    def parse(cls, row):
+        setattr(cls, 'illust_id', row[0])
+        setattr(cls, 'user_id', row[1])
+        setattr(cls, 'user_name', row[24])
+        setattr(cls, 'title', row[3])
+        setattr(cls, 'description', row[18])
+        setattr(cls, 'post_name', row[5])
+        setattr(cls, 'posted_at', row[12])
+        setattr(cls, 'thumb', row[6])
+        setattr(cls, 'extension', row[2])
+        setattr(cls, 'prefix', row[4])
+        setattr(cls, 'tool', row[14])
+        setattr(cls, 'page', row[19])
+        setattr(cls, 'preview', row[17])
+        setattr(cls, 'score', row[16])
+        setattr(cls, 'reviewer', row[15])
+        setattr(cls, 'bookmark', row[22])
+        setattr(cls, 'r18', row[26] if True else False)
+        setattr(cls, 'tags', row[13].split())
+        setattr(cls, 'imgs', PixivUtils.abs_img_url(row[0], row[24], row[2], row[4], row[19], row[6], row[12], row[13]))
+        return cls

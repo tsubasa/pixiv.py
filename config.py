@@ -11,7 +11,7 @@ import argparse
 # args
 parser = argparse.ArgumentParser(description='Pixivスクリプト')
 parser.add_argument('-k', '--keyword', help='検索キーワード')
-parser.add_argument('-p', '--page', type=int, help='最大取得ページ数 max:200, min:1, default:200')
+parser.add_argument('-p', '--page', type=int, help='取得開始ページ位置 default:1 [1-200]')
 args = parser.parse_args()
 
 if not args.keyword:
