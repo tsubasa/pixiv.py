@@ -147,19 +147,25 @@ class PixivIllustSearch(object):
         opener = urllib2.build_opener()
 
         try:
-            return opener.open(request).read()
+            response = opener.open(request).read()
+            if response:
+                return response
+            else:
+                self.page = self.PIXIV_SP_SEARCH_MAX_PAGE
+                return None
+
         except Exception:
             return None
 
 class PixivResultParser(object):
 
     def __init__(self, data):
-        self.rows = list(csv.reader(cStringIO.StringIO(data)))
-        if self.rows:
+        if data:
+            self.rows = list(csv.reader(cStringIO.StringIO(data)))
             self.size = len(self.rows)
             self.cursor = 0
         else:
-            raise Exception('No data')
+            self.size = self.cursor = 0
 
     def __iter__(self):
         return self

@@ -10,14 +10,9 @@ import argparse
 
 # args
 parser = argparse.ArgumentParser(description='Pixivスクリプト')
-parser.add_argument('-k', '--keyword', nargs='*', type=str, help='検索キーワード')
-parser.add_argument('-p', '--page', type=int, help='取得開始ページ位置 default:1 [1-200]')
+parser.add_argument('-k', '--keyword', type=str, default='', help='検索キーワード')
+parser.add_argument('-p', '--page', type=int, default=1, help='取得開始ページ位置 default:1 [1-200]')
 args = parser.parse_args()
-
-if args.keyword:
-    args.keyword = ' '.join(args.keyword)
-if not args.page:
-    args.page = 200
 
 # setting
 config_path = os.path.abspath(os.path.dirname(__file__)) + '/config/app.cfg'
