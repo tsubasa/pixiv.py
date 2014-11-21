@@ -10,12 +10,12 @@ import argparse
 
 # args
 parser = argparse.ArgumentParser(description='Pixivスクリプト')
-parser.add_argument('-k', '--keyword', help='検索キーワード')
+parser.add_argument('-k', '--keyword', nargs='*', type=str, help='検索キーワード')
 parser.add_argument('-p', '--page', type=int, help='取得開始ページ位置 default:1 [1-200]')
 args = parser.parse_args()
 
-if not args.keyword:
-    args.keyword = '魔法少女まどか☆マギカ'
+if args.keyword:
+    args.keyword = ' '.join(args.keyword)
 if not args.page:
     args.page = 200
 
