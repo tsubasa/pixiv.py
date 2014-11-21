@@ -152,7 +152,7 @@ class PixivSearch(object):
 
     def set_order(self, order=''):
         """
-        :param order: 並び順 [None] 新しい順, [date] 古い順
+        :param order: 並び順 [None][date_d] 新しい順, [date] 古い順
         """
         self.order = order
 
@@ -229,6 +229,26 @@ class PixivNovelSearch(PixivSearch):
 
         return self._search(self._api.search_novel, headers, values)
 
+class PixivUserSearch(PixivSearch):
+
+    def __init__(self, api, keyword='', page=1, order=None, mode=None):
+        super(PixivUserSearch, self).__init__(api, keyword, page, order, mode)
+
+    def search(self, keyword=''):
+        self.keyword = keyword if keyword else self.keyword
+
+        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
+            return None
+
+        headers = {'User-Agent': self._api.ua,
+                   'Cookie': 'PHPSESSID=' + self._api.phpsess}
+        values = {'PHPSESSID': self._api.phpsess,
+                  'nick': self.keyword,
+                  'p': self.page,
+                  }
+
+        return self._search(self._api.search_user, headers, values)
+
 class PixivResultParser(object):
 
     def __init__(self, data):
@@ -237,7 +257,9 @@ class PixivResultParser(object):
             self.size = len(self.rows)
             self.cursor = 0
 
-            if self.rows[0][2] in ['jpg', 'gif', 'png', 'jpeg']:
+            if not self.rows[0][0]:
+                self.format = 'user'
+            elif self.rows[0][2] in ['jpg', 'gif', 'png', 'jpeg']:
                 self.format = 'illust'
             else:
                 self.format = 'novel'
@@ -253,7 +275,9 @@ class PixivResultParser(object):
             raise StopIteration
 
         try:
-            if self.format in ['illust']:
+            if self.format in ['user']:
+                return PixivUserModel.parse(self.rows[self.cursor])
+            elif self.format in ['illust']:
                 return PixivIllustModel.parse(self.rows[self.cursor])
             elif self.format in ['novel']:
                 return PixivNovelModel.parse(self.rows[self.cursor])
@@ -371,9 +395,6 @@ class PixivNovelModel(PixivModel):
         setattr(cls, 'post_name', row[5])
         setattr(cls, 'posted_at', row[12])
         setattr(cls, 'thumb', row[6])
-        # setattr(cls, 'extension', row[2])
-        # setattr(cls, 'prefix', row[4])
-        # setattr(cls, 'tool', row[14])
         setattr(cls, 'page', row[19])
         setattr(cls, 'preview', row[17])
         setattr(cls, 'score', row[16])
@@ -381,4 +402,14 @@ class PixivNovelModel(PixivModel):
         setattr(cls, 'bookmark', row[22])
         setattr(cls, 'r18', row[26])
         setattr(cls, 'tags', row[13].split())
+        return cls
+
+class PixivUserModel(PixivModel):
+
+    @classmethod
+    def parse(cls, row):
+        setattr(cls, 'user_id', row[1])
+        setattr(cls, 'user_name', row[24])
+        setattr(cls, 'post_name', row[5])
+        setattr(cls, 'thumb', row[6])
         return cls
