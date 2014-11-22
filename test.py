@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from api import PixivApi, PixivIllustLookup, PixivIllustSearch, PixivResultParser, PixivNovelSearch, PixivNovelLookup, PixivUserSearch
+from pixiv.api import PixivAPI, PixivIllustLookup, PixivIllustSearch, PixivResultParser, PixivNovelSearch, PixivNovelLookup, PixivUserSearch
 from config import config, args
 
 def pixiv_bot():
-    api = PixivApi(config.pixiv.user, config.pixiv.passwd)
+    api = PixivAPI(config.pixiv.user, config.pixiv.passwd)
 
     # イラストルックアップ
     illust = PixivIllustLookup(api)
