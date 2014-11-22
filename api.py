@@ -12,10 +12,6 @@ from handlers import RedirectCatchHeader
 
 PIXIV_SP_REFERRER = 'http://spapi.pixiv.net/'
 
-# TODO
-# ノベル対応
-# データモデルにフォーマットタイプ追加 manga, anime, illust, novel
-
 class PixivApi(object):
 
     def __init__(self, user, passwd, scheme='http', host='spapi.pixiv.net',
@@ -58,8 +54,8 @@ class PixivApi(object):
         return ''.join([self.scheme, '://', self.host, '/iphone/novel_text.php'])
 
     @property
-    def user(self):
-        return ''.join([self.scheme, '://', self.host, '/'])
+    def user(self, user_id):
+        return ''.join(['https://public-api.secure.pixiv.net/v1/users/', user_id, '.json'])
 
     @property
     def search_illust(self):
@@ -163,6 +159,10 @@ class PixivSearch(object):
             raise TypeError('Not Numeric')
 
     def _search(self, api, headers, values):
+
+        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
+            return None
+
         request = urllib2.Request('?'.join([api, urllib.urlencode(values)]), headers=headers)
         opener = urllib2.build_opener()
 
@@ -190,15 +190,10 @@ class PixivIllustSearch(PixivSearch):
         self.scd = scd
 
     def search(self, keyword=''):
-        self.keyword = keyword if keyword else self.keyword
-
-        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
-            return None
-
         headers = {'User-Agent': self._api.ua,
                    'Cookie': 'PHPSESSID=' + self._api.phpsess}
         values = {'PHPSESSID': self._api.phpsess,
-                  'word': self.keyword,
+                  'word': keyword if keyword else self.keyword,
                   'p': self.page,
                   's_mode': self.mode,
                   'order': self.order,
@@ -213,15 +208,10 @@ class PixivNovelSearch(PixivSearch):
         super(PixivNovelSearch, self).__init__(api, keyword, page, order, mode)
 
     def search(self, keyword=''):
-        self.keyword = keyword if keyword else self.keyword
-
-        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
-            return None
-
         headers = {'User-Agent': self._api.ua,
                    'Cookie': 'PHPSESSID=' + self._api.phpsess}
         values = {'PHPSESSID': self._api.phpsess,
-                  'word': self.keyword,
+                  'word': keyword if keyword else self.keyword,
                   'p': self.page,
                   's_mode': self.mode,
                   'order': self.order,
@@ -235,15 +225,10 @@ class PixivUserSearch(PixivSearch):
         super(PixivUserSearch, self).__init__(api, keyword, page, order, mode)
 
     def search(self, keyword=''):
-        self.keyword = keyword if keyword else self.keyword
-
-        if self.page > self.PIXIV_SP_SEARCH_MAX_PAGE:
-            return None
-
         headers = {'User-Agent': self._api.ua,
                    'Cookie': 'PHPSESSID=' + self._api.phpsess}
         values = {'PHPSESSID': self._api.phpsess,
-                  'nick': self.keyword,
+                  'nick': keyword if keyword else self.keyword,
                   'p': self.page,
                   }
 
@@ -311,27 +296,13 @@ class PixivUtils(object):
 
 class PixivModel(object):
 
-    @classmethod
-    def parse(cls, row):
-        raise NotImplementedError
-
-    @classmethod
-    def parse_list(cls, rows):
-        results = []
-        for row in rows:
-            if row:
-                results.append(cls.parse(row))
-        return results
-
-class PixivIllustModel(PixivModel):
-
     """
     :param row[0]   : illust_id
     :param row[1]   : user_id
     :param row[2]   : extension
     :param row[3]   : image title
     :param row[4]   : image directory prefix
-    :param row[5]   : post_name
+    :param row[5]   : display_name
     :param row[6]   : mobile thumbnail (128x128) /img-inf/ or /img-master/
     :param row[7]   : unused/empty
     :param row[8]   : unused/empty
@@ -358,28 +329,43 @@ class PixivIllustModel(PixivModel):
     :param row[29]  : mobile profile image
     :param row[30]  : unused/empty
     """
-    # @see https://danbooru.donmai.us/wiki_pages/58938#Explanation of result fields for works
+    # @see https://danbooru.donmai.us/wiki_pages/58938 #Explanation of result fields for works
+
+    @classmethod
+    def parse(cls, row):
+        raise NotImplementedError
+
+    @classmethod
+    def parse_list(cls, rows):
+        results = []
+        for row in rows:
+            if row:
+                results.append(cls.parse(row))
+        return results
+
+class PixivIllustModel(PixivModel):
 
     @classmethod
     def parse(cls, row):
         setattr(cls, 'id', row[0])
         setattr(cls, 'user_id', row[1])
-        setattr(cls, 'user_name', row[24])
-        setattr(cls, 'title', row[3])
-        setattr(cls, 'description', row[18])
-        setattr(cls, 'post_name', row[5])
-        setattr(cls, 'posted_at', row[12])
-        setattr(cls, 'thumb', row[6])
         setattr(cls, 'extension', row[2])
+        setattr(cls, 'title', row[3])
         setattr(cls, 'prefix', row[4])
-        setattr(cls, 'tool', row[14])
-        setattr(cls, 'page', row[19])
-        setattr(cls, 'preview', row[17])
-        setattr(cls, 'score', row[16])
-        setattr(cls, 'reviewer', row[15])
-        setattr(cls, 'bookmark', row[22])
-        setattr(cls, 'r18', row[26])
+        setattr(cls, 'display_name', row[5])
+        setattr(cls, 'thumb', row[6])
+        setattr(cls, 'posted_at', row[12])
         setattr(cls, 'tags', row[13].split())
+        setattr(cls, 'tool', row[14])
+        setattr(cls, 'rated_count', row[15])
+        setattr(cls, 'score_count', row[16])
+        setattr(cls, 'view_count', row[17])
+        setattr(cls, 'description', row[18])
+        setattr(cls, 'page', row[19])
+        setattr(cls, 'favorites_count', row[22])
+        setattr(cls, 'comments_count', row[23])
+        setattr(cls, 'user_name', row[24])
+        setattr(cls, 'r18', row[26])
         setattr(cls, 'imgs', PixivUtils.abs_img_url(row[0], row[24], row[2], row[4], row[19], row[6], row[12], row[13]))
         return cls
 
@@ -389,19 +375,20 @@ class PixivNovelModel(PixivModel):
     def parse(cls, row):
         setattr(cls, 'id', row[0])
         setattr(cls, 'user_id', row[1])
-        setattr(cls, 'user_name', row[24])
         setattr(cls, 'title', row[3])
-        setattr(cls, 'description', row[18])
-        setattr(cls, 'post_name', row[5])
-        setattr(cls, 'posted_at', row[12])
+        setattr(cls, 'display_name', row[5])
         setattr(cls, 'thumb', row[6])
-        setattr(cls, 'page', row[19])
-        setattr(cls, 'preview', row[17])
-        setattr(cls, 'score', row[16])
-        setattr(cls, 'reviewer', row[15])
-        setattr(cls, 'bookmark', row[22])
-        setattr(cls, 'r18', row[26])
+        setattr(cls, 'posted_at', row[12])
         setattr(cls, 'tags', row[13].split())
+        setattr(cls, 'rated_count', row[15])
+        setattr(cls, 'score_count', row[16])
+        setattr(cls, 'view_count', row[17])
+        setattr(cls, 'description', row[18])
+        setattr(cls, 'page', row[19])
+        setattr(cls, 'favorites_count', row[22])
+        setattr(cls, 'comments_count', row[23])
+        setattr(cls, 'user_name', row[24])
+        setattr(cls, 'r18', row[26])
         return cls
 
 class PixivUserModel(PixivModel):
@@ -409,7 +396,7 @@ class PixivUserModel(PixivModel):
     @classmethod
     def parse(cls, row):
         setattr(cls, 'user_id', row[1])
-        setattr(cls, 'user_name', row[24])
-        setattr(cls, 'post_name', row[5])
+        setattr(cls, 'display_name', row[5])
         setattr(cls, 'thumb', row[6])
+        setattr(cls, 'user_name', row[24])
         return cls
