@@ -6,13 +6,14 @@ import urllib2
 import re
 import csv
 import cStringIO
-import random
 
+from error import PixivError
 from handlers import RedirectCatchHeader
+from models import PixivUserModel, PixivIllustModel, PixivNovelModel
 
 PIXIV_SP_REFERRER = 'http://spapi.pixiv.net/'
 
-class PixivApi(object):
+class PixivAPI(object):
 
     def __init__(self, user, passwd, scheme='http', host='spapi.pixiv.net',
                  ua='Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36'):
@@ -39,7 +40,7 @@ class PixivApi(object):
         try:
             return re.findall('PHPSESSID=(.*?);', headers['Set-Cookie'])[0]
         except:
-            raise Exception('セッション取得エラー')
+            raise PixivError('セッション取得エラー')
 
     @property
     def login(self):
@@ -54,8 +55,8 @@ class PixivApi(object):
         return ''.join([self.scheme, '://', self.host, '/iphone/novel_text.php'])
 
     @property
-    def user(self, user_id):
-        return ''.join(['https://public-api.secure.pixiv.net/v1/users/', user_id, '.json'])
+    def user(self):
+        return ''.join(['https://public-api.secure.pixiv.net/v1/users/{{USER_ID}}.json'])
 
     @property
     def search_illust(self):
@@ -72,10 +73,10 @@ class PixivApi(object):
 class PixivLookup(object):
 
     def __init__(self, api):
-        if (isinstance(api, PixivApi)):
+        if (isinstance(api, PixivAPI)):
             self._api = api
         else:
-            raise Exception('PixivApiオブジェクトではありません')
+            raise PixivError('PixivApiオブジェクトではありません')
 
     def _lookup(self, api, headers, values):
         request = urllib2.Request('?'.join([api, urllib.urlencode(values)]), headers=headers)
@@ -121,14 +122,14 @@ class PixivSearch(object):
     PIXIV_SP_SEARCH_MAX_PAGE = 200
 
     def __init__(self, api, keyword='', page=1, order='', mode='s_tag'):
-        if (isinstance(api, PixivApi)):
+        if (isinstance(api, PixivAPI)):
             self._api = api
             self.keyword = keyword
             self.page = page
             self.mode = mode
             self.order = order
         else:
-            raise Exception('PixivApiオブジェクトではありません')
+            raise PixivError('PixivApiオブジェクトではありません')
 
     def __iter__(self):
         return self
@@ -268,135 +269,3 @@ class PixivResultParser(object):
                 return PixivNovelModel.parse(self.rows[self.cursor])
         finally:
             self.cursor += 1
-
-class PixivUtils(object):
-
-    @staticmethod
-    def abs_img_url(illust_id, user_name, ext, prefix, page, thumb, posted_at, tags):
-        img_list = []
-
-        if thumb and 'img-master' in thumb:
-            if 'うごイラ' in tags:
-                img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-zip-ugoira/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_ugoira600x600.zip')
-            else:
-                # http://i1.pixiv.net/img-original/img/2014/10/01/21/51/02/{illust_id}_p0.jpg
-                # http://i1.pixiv.net/img-original/img/2014/10/01/21/51/02/{illust_id}_p1.jpg ...
-                for p in range(0, int(page if page else 1)):
-                    img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img-original/img/' + re.sub(r'( |-|:)', '/', str(posted_at)) + '/' + str(illust_id) + '_p' + str(p) + '.' + ext)
-
-        elif thumb and 'img-inf' in thumb:
-            if page:
-                for p in range(0, int(page)):
-                    img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img' + str(prefix).zfill(2) + '/img/' + user_name + '/' + str(illust_id) + '_big_p' + str(p) + '.' + ext)
-            else:
-                # http://i1.pixiv.net/img{prefix}/img/{user_name}/{illust_id}.jpg
-                img_list.append('http://i' + str(random.randint(1, 2)) + '.pixiv.net/img' + str(prefix).zfill(2) + '/img/' + user_name + '/' + str(illust_id) + '.' + ext)
-
-        return img_list
-
-class PixivModel(object):
-
-    """
-    :param row[0]   : illust_id
-    :param row[1]   : user_id
-    :param row[2]   : extension
-    :param row[3]   : image title
-    :param row[4]   : image directory prefix
-    :param row[5]   : display_name
-    :param row[6]   : mobile thumbnail (128x128) /img-inf/ or /img-master/
-    :param row[7]   : unused/empty
-    :param row[8]   : unused/empty
-    :param row[9]   : mobile thumbnail (480mw)
-    :param row[10]  : unused/empty
-    :param row[11]  : unused/empty
-    :param row[12]  : upload date
-    :param row[13]  : space-delimited list of tags
-    :param row[14]  : drawing software (e.g. SAI)
-    :param row[15]  : number of ratings
-    :param row[16]  : total score (sum of all ratings)
-    :param row[17]  : number of views
-    :param row[18]  : image description (raw HTML)
-    :param row[19]  : number of pages (empty if not a manga sequence)
-    :param row[20]  : unused/empty
-    :param row[21]  : unused/empty
-    :param row[22]  : number of favorites
-    :param row[23]  : number of comments
-    :param row[24]  : artist username
-    :param row[25]  : unused/empty
-    :param row[26]  : R-18 marker (0 is safe, 1 is R-18, 2 is R-18G)
-    :param row[27]  : novel series id (blank for illustrations and novels not part of a series)
-    :param row[28]  : unused/empty
-    :param row[29]  : mobile profile image
-    :param row[30]  : unused/empty
-    """
-    # @see https://danbooru.donmai.us/wiki_pages/58938 #Explanation of result fields for works
-
-    @classmethod
-    def parse(cls, row):
-        raise NotImplementedError
-
-    @classmethod
-    def parse_list(cls, rows):
-        results = []
-        for row in rows:
-            if row:
-                results.append(cls.parse(row))
-        return results
-
-class PixivIllustModel(PixivModel):
-
-    @classmethod
-    def parse(cls, row):
-        setattr(cls, 'id', row[0])
-        setattr(cls, 'user_id', row[1])
-        setattr(cls, 'extension', row[2])
-        setattr(cls, 'title', row[3])
-        setattr(cls, 'prefix', row[4])
-        setattr(cls, 'display_name', row[5])
-        setattr(cls, 'thumb', row[6])
-        setattr(cls, 'posted_at', row[12])
-        setattr(cls, 'tags', row[13].split())
-        setattr(cls, 'tool', row[14])
-        setattr(cls, 'rated_count', row[15])
-        setattr(cls, 'score_count', row[16])
-        setattr(cls, 'view_count', row[17])
-        setattr(cls, 'description', row[18])
-        setattr(cls, 'page', row[19])
-        setattr(cls, 'favorites_count', row[22])
-        setattr(cls, 'comments_count', row[23])
-        setattr(cls, 'user_name', row[24])
-        setattr(cls, 'r18', row[26])
-        setattr(cls, 'imgs', PixivUtils.abs_img_url(row[0], row[24], row[2], row[4], row[19], row[6], row[12], row[13]))
-        return cls
-
-class PixivNovelModel(PixivModel):
-
-    @classmethod
-    def parse(cls, row):
-        setattr(cls, 'id', row[0])
-        setattr(cls, 'user_id', row[1])
-        setattr(cls, 'title', row[3])
-        setattr(cls, 'display_name', row[5])
-        setattr(cls, 'thumb', row[6])
-        setattr(cls, 'posted_at', row[12])
-        setattr(cls, 'tags', row[13].split())
-        setattr(cls, 'rated_count', row[15])
-        setattr(cls, 'score_count', row[16])
-        setattr(cls, 'view_count', row[17])
-        setattr(cls, 'description', row[18])
-        setattr(cls, 'page', row[19])
-        setattr(cls, 'favorites_count', row[22])
-        setattr(cls, 'comments_count', row[23])
-        setattr(cls, 'user_name', row[24])
-        setattr(cls, 'r18', row[26])
-        return cls
-
-class PixivUserModel(PixivModel):
-
-    @classmethod
-    def parse(cls, row):
-        setattr(cls, 'user_id', row[1])
-        setattr(cls, 'display_name', row[5])
-        setattr(cls, 'thumb', row[6])
-        setattr(cls, 'user_name', row[24])
-        return cls
