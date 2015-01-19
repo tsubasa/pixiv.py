@@ -8,8 +8,7 @@ PixivAPI
 usage:
 
 ```
-# help
-python test.py -h
+api = PixivAPI(USER, PASS)
 
 # イラストルックアップ
 illust = PixivIllustLookup(api)
@@ -36,4 +35,7 @@ for result in PixivUserSearch(api, keyword='まどか', page=1):
     for user in PixivResultParser(result):
         print user
         print 'id: %s user_name: %s (%s)' % (user.user_id, user.display_name, user.user_name)
+
+# Pixiv-API テスト
+python test.py -h
 ```
