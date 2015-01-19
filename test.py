@@ -1,11 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import argparse
 from pixiv.api import PixivAPI, PixivIllustLookup, PixivIllustSearch, PixivResultParser, PixivNovelSearch, PixivNovelLookup, PixivUserSearch
-from config import config, args
+
+# args
+parser = argparse.ArgumentParser(description='Pixivスクリプト')
+parser.add_argument('-user', '--user', type=str, required=True, help='ユーザーID')
+parser.add_argument('-pass', '--password', type=str, required=True, help='パスワード')
+parser.add_argument('-k', '--keyword', type=str, default='', help='検索キーワード')
+parser.add_argument('-p', '--page', type=int, default=1, help='取得開始ページ位置 default:1 [1-200]')
+args = parser.parse_args()
 
 def pixiv_bot():
-    api = PixivAPI(config.pixiv.user, config.pixiv.passwd)
+    api = PixivAPI(args.user, args.password)
 
     # イラストルックアップ
     illust = PixivIllustLookup(api)

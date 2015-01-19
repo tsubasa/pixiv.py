@@ -40,7 +40,7 @@ class PixivAPI(object):
         try:
             return re.findall('PHPSESSID=(.*?);', headers['Set-Cookie'])[0]
         except:
-            raise PixivError('セッション取得エラー')
+            raise PixivError('ログインに失敗しました')
 
     @property
     def login(self):
