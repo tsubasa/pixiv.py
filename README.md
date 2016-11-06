@@ -8,13 +8,25 @@ PixivAPIライブラリ
 
 - イラスト検索
 - イラスト情報取得
+- イラストお気に入り追加/解除
+- ユーザー検索
 - ユーザー情報取得
+- ユーザーフォロー/フォロー解除
+- ユーザーお気に入り取得/削除
+- 小説検索
+
+TODO
+----
+
+- お気に入りタグ取得 (user/bookmark-tags)
+- 小説詳細取得 (novel/text)
+- 小説シリーズ取得 (novel/series)
+- 小説お気に入り追加/解除  (novel/add, novel/delete)
 
 サンプルコード
 --------------
 
 ```
-# r18作品を含める場合必須
 auth = OAuthHandler()
 auth.login('USERNAME', 'PASSWORD')
 
@@ -25,43 +37,40 @@ aapi = AppPixivAPI(auth)
 
 # ユーザー詳細取得
 print(aapi.user_detail(user_id=1))
+
 # 関連イラスト取得
 print(aapi.illust_related(illust_id=1))
+
 # イラストコメント取得
 print(aapi.illust_comments(illust_id=1))
+
 # うごイラメタデータ取得
 print(aapi.ugoira_metadata(illust_id=1))
+
 # オートコンプリート
 print(aapi.search_autocomplete(word='ラブライブ！'))
+
 # イラスト検索
 for illust in aapi.search_illust(word='ラブライブ！'):
     print(illust)
-# イラスト単位で取得件数指定
+
+# イラスト検索（イラスト単位で取得件数指定）
 for illust in AppCursor(aapi.search_illust, word='ラブライブ！').items(20):
     print(illust)
-# ページ単位で取得件数指定
+
+# イラスト検索（ページ単位で取得件数指定）
 for page in AppCursor(aapi.search_illust, word='ラブライブ！').pages(5):
     for illust in page:
         print(illust)
 
-#
-# Pixiv Public API (old)
-#
-api = PixivAPI(auth)
+# ユーザー検索
+for user in aapi.search_user(word='テスト'):
+    print(user)
 
-# イラスト詳細取得
-print(api.works(1))
-# ユーザー情報
-print(api.users(1))
-# キーワード検索
-print(api.search_works(q='ラブライブ！'))
-# イラスト単位で取得件数指定
-for work in Cursor(api.search_works, q='ラブライブ！').items(20):
-    print(work)
-# ページ単位で取得件数指定
-for page in Cursor(api.search_works, q='ラブライブ！').pages(5):
-    for work in page:
-        print(work)
+# 小説検索
+for novel in aapi.search_novel(word='ラブライブ！'):
+    print(novel)
+
 
 #
 # Pixiv Illust Download

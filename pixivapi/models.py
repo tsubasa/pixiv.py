@@ -134,9 +134,56 @@ class AppIllust(Model):
     @classmethod
     def parse_list(cls, api, json_list):
         results = ResultSet()
-        for obj in json_list['illusts']:
-            if obj:
-                results.append(cls.parse(api, obj))
+
+        if 'illusts' in json_list:
+            for obj in json_list['illusts']:
+                if obj:
+                    results.append(cls.parse(api, obj))
+        else:
+            for obj in json_list:
+                if obj:
+                    results.append(cls.parse(api, obj))
+        return results
+
+    def __eq__(self, other):
+        if isinstance(other, AppIllust):
+            return self.id == other.id
+
+        return NotImplemented
+
+    def __ne__(self, other):
+        result = self == other
+
+        if result is NotImplemented:
+            return result
+
+        return not result
+
+class AppNovel(Model):
+
+    @classmethod
+    def parse(cls, api, json):
+        novel = cls(api)
+        setattr(novel, '_json', json)
+        for k, v in json.items():
+            if k == 'user':
+                setattr(novel, k, AppUser.parse(api, v))
+            else:
+                setattr(novel, k, v)
+        return novel
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        results = ResultSet()
+
+        if 'novels' in json_list:
+            for obj in json_list['novels']:
+                if obj:
+                    results.append(cls.parse(api, obj))
+        else:
+            for obj in json_list:
+                if obj:
+                    results.append(cls.parse(api, obj))
         return results
 
     def __eq__(self, other):
@@ -165,9 +212,21 @@ class AppUser(Model):
                 setattr(user, k, AppProfile.parse(api, v))
             elif k == 'workspace':
                 setattr(user, k, AppWorkspace.parse(api, v))
+            elif k == 'illusts':
+                setattr(user, k, AppIllust.parse_list(api, v))
+            elif k == 'novels':
+                setattr(user, k, AppNovel.parse_list(api, v))
             else:
                 setattr(user, k, v)
         return user
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        results = ResultSet()
+        for obj in json_list['user_previews']:
+            if obj:
+                results.append(cls.parse(api, obj))
+        return results
 
 class AppProfile(Model):
 
@@ -228,6 +287,7 @@ class AppAutoComplete(Model):
 class AppModelFactory(object):
 
     app_illust = AppIllust
+    app_novel = AppNovel
     app_user = AppUser
 
     app_comment = AppComment

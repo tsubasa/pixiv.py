@@ -23,14 +23,18 @@ def bind_api(**config):
         path = config['path']
         payload_type = config.get('payload_type', None)
         payload_list = config.get('payload_list', False)
+        require_auth = config.get('require_auth', False)
         allowed_param = config.get('allowed_param', [])
-        required_param = config.get('required_param', [])
+        require_param = config.get('require_param', [])
         default_param = config.get('default_param', {})
         method = config.get('method', 'GET')
         session = requests.Session()
 
         def __init__(self, args, kwargs):
             api = self.api
+
+            if self.require_auth and not api.access_token:
+                raise PixivError('Authentication required')
 
             self.host = api.host
             self.api_root = api.api_root
@@ -70,7 +74,7 @@ def bind_api(**config):
 
                 self.session.params[k] = convert_to_utf8_str(v)
 
-            for k in self.required_param:
+            for k in self.require_param:
                 if k not in self.session.params:
                     raise PixivError('引数が不足しています: %s' % k)
 
@@ -92,9 +96,15 @@ def bind_api(**config):
             full_url = 'https://' + self.host + self.api_root + self.path
 
             try:
-                resp = self.session.request(self.method,
-                                            full_url,
-                                            timeout=self.api.timeout)
+                if self.method == 'POST':
+                    resp = self.session.request(self.method,
+                                                full_url,
+                                                data=self.session.params,
+                                                timeout=self.api.timeout)
+                else:
+                    resp = self.session.request(self.method,
+                                                full_url,
+                                                timeout=self.api.timeout)
             except Exception as e:
                 raise PixivError('Failed to send request: %s' % e)
 

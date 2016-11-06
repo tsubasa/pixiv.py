@@ -34,6 +34,16 @@ print(aapi.search_autocomplete(word='ラブライブ！'))
 for illust in aapi.search_illust(word='ラブライブ！'):
     print(illust)
 
+# ユーザー検索
+for user in aapi.search_user(word='テスト'):
+    print(user)
+    break
+
+# 小説検索
+for novel in aapi.search_novel(word='ラブライブ！'):
+    print(novel)
+    break
+
 # イラスト単位で取得件数指定
 for illust in AppCursor(aapi.search_illust, word='ラブライブ！').items(20):
     print(illust)
@@ -43,6 +53,10 @@ for page in AppCursor(aapi.search_illust, word='ラブライブ！').pages(5):
     for illust in page:
         print(illust)
 
+# ユーザーのお気に入りイラスト取得
+for illust in aapi.user_bookmarks_illust(user_id=1):
+    print(illust)
+    break
 
 #
 # Pixiv Public API (old)

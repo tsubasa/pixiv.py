@@ -52,7 +52,7 @@ class PixivAPI(API):
             payload_type='work',
             payload_list=False,
             allowed_param=['id', 'image_sizes', 'include_stats'],
-            required_param=['id'],
+            require_param=['id'],
             default_param={
                 'image_sizes': 'px_128x128,small,medium,large,px_480mw',
                 'include_stats': True
@@ -70,7 +70,7 @@ class PixivAPI(API):
             payload_type='user',
             payload_list=False,
             allowed_param=['id', 'image_sizes', 'include_stats', 'include_profile', 'include_workspace', 'include_contacts', 'profile_image_sizes'],
-            required_param=['id'],
+            require_param=['id'],
             default_param={
                 'image_sizes': 'px_128x128,small,medium,large,px_480mw',
                 'include_stats': True,
@@ -92,7 +92,7 @@ class PixivAPI(API):
             payload_type='work',
             payload_list=True,
             allowed_param=['q', 'image_sizes', 'include_stats', 'include_sanity_level', 'mode', 'order', 'page', 'per_page', 'period', 'sort', 'types'],
-            required_param=['q'],
+            require_param=['q'],
             default_param={
                 'image_sizes': 'px_128x128,large,px_480mw',
                 'include_stats': True,
@@ -134,7 +134,7 @@ class AppPixivAPI(API):
             payload_type='app_user',
             payload_list=False,
             allowed_param=['user_id'],
-            required_param=['user_id'],
+            require_param=['user_id'],
             default_param={}
         )
 
@@ -150,7 +150,77 @@ class AppPixivAPI(API):
             payload_type='app_illust',
             payload_list=True,
             allowed_param=['user_id', 'filter', 'type'],
-            required_param=['user_id'],
+            require_param=['user_id'],
+            default_param={
+                'filter': 'for_ios',
+            }
+        )
+
+    @property
+    def user_bookmarks_illust(self):
+        u""" ユーザーのお気に入りイラスト
+        :param user_id: ユーザーID
+        :param restrict: 公開／非公開 [public, private]
+        """
+        return bind_api(
+            api=self,
+            path='/user/bookmarks/illust',
+            payload_type='app_illust',
+            payload_list=True,
+            require_auth=True,
+            allowed_param=['user_id', 'restrict', 'offset', 'page'],
+            require_param=['user_id', 'restrict'],
+            default_param={
+                'restrict': 'public'
+            }
+        )
+
+    @property
+    def user_follow_add(self):
+        u""" ユーザーフォロー
+        :param user_id: ユーザーID
+        :param restrict: 公開／非公開 [public, private]
+        """
+        return bind_api(
+            api=self,
+            method='POST',
+            path='/user/follow/add',
+            require_auth=True,
+            allowed_param=['user_id', 'restrict'],
+            require_param=['user_id', 'restrict'],
+            default_param={
+                'restrict': 'public'
+            }
+        )
+
+    @property
+    def user_follow_delete(self):
+        u""" ユーザーフォロー解除
+        :param user_id: ユーザーID
+        """
+        return bind_api(
+            api=self,
+            method='POST',
+            path='/user/follow/delete',
+            require_auth=True,
+            allowed_param=['user_id'],
+            require_param=['user_id'],
+            default_param={}
+        )
+
+    @property
+    def user_related(self):
+        u""" 関連ユーザー
+        :param seed_user_id: ユーザーID
+        """
+        return bind_api(
+            api=self,
+            path='/user/related',
+            payload_type='app_user',
+            payload_list=True,
+            require_auth=True,
+            allowed_param=['seed_user_id', 'filter'],
+            require_param=['seed_user_id'],
             default_param={
                 'filter': 'for_ios',
             }
@@ -158,7 +228,7 @@ class AppPixivAPI(API):
 
     @property
     def search_illust(self):
-        u""" 作品検索
+        u""" イラスト検索
         :param word: 検索キーワード
         :param duration: 検索期間 [within_last_day, within_last_week, within_last_month]
         :param search_target: 検索対象 [partial_match_for_tags(タグ部分一致), exact_match_for_tags(タグ完全一致), title_and_caption(タイトルキャプション)
@@ -171,11 +241,51 @@ class AppPixivAPI(API):
             payload_type='app_illust',
             payload_list=True,
             allowed_param=['word', 'duration', 'filter', 'search_target', 'sort', 'offset', 'page'],
-            required_param=['word'],
+            require_param=['word'],
             default_param={
                 'filter': 'for_ios',
                 'search_target': 'partial_match_for_tags',
                 'sort': 'date_desc',
+            }
+        )
+
+    @property
+    def search_novel(self):
+        u""" 小説検索
+        :param word: 検索キーワード
+        :param duration: 検索期間 [within_last_day, within_last_week, within_last_month]
+        :param search_target: 検索対象 [partial_match_for_tags(タグ部分一致), exact_match_for_tags(タグ完全一致), title_and_caption(タイトルキャプション)
+        :param sort: ソート [date_desc, date_asc]
+        :param offset: 検索開始位置のオフセット
+        """
+        return bind_api(
+            api=self,
+            path='/search/novel',
+            payload_type='app_novel',
+            payload_list=True,
+            allowed_param=['word', 'duration', 'search_target', 'sort', 'offset', 'page'],
+            require_param=['word'],
+            default_param={
+                'search_target': 'partial_match_for_tags',
+                'sort': 'date_desc',
+            }
+        )
+
+    @property
+    def search_user(self):
+        u""" ユーザー検索
+        :param word: 検索キーワード
+        :param offset: 検索開始位置のオフセット
+        """
+        return bind_api(
+            api=self,
+            path='/search/user',
+            payload_type='app_user',
+            payload_list=True,
+            allowed_param=['word', 'filter', 'offset', 'page'],
+            require_param=['word'],
+            default_param={
+                'filter': 'for_ios',
             }
         )
 
@@ -187,7 +297,7 @@ class AppPixivAPI(API):
             payload_type='app_auto_complete',
             payload_list=False,
             allowed_param=['word'],
-            required_param=['word'],
+            require_param=['word'],
             default_param={}
         )
 
@@ -202,7 +312,7 @@ class AppPixivAPI(API):
             payload_type='app_metadata',
             payload_list=False,
             allowed_param=['illust_id'],
-            required_param=['illust_id'],
+            require_param=['illust_id'],
             default_param={}
         )
 
@@ -217,7 +327,7 @@ class AppPixivAPI(API):
             payload_type='app_illust',
             payload_list=True,
             allowed_param=['illust_id', 'filter'],
-            required_param=['illust_id'],
+            require_param=['illust_id'],
             default_param={
                 'filter': 'for_ios',
             }
@@ -234,6 +344,41 @@ class AppPixivAPI(API):
             payload_type='app_comment',
             payload_list=True,
             allowed_param=['illust_id'],
-            required_param=['illust_id'],
+            require_param=['illust_id'],
+            default_param={}
+        )
+
+    @property
+    def illust_bookmark_add(self):
+        u""" イラストお気に入り追加
+        :param illust_id: イラストID
+        :param restrict: 公開／非公開 [public, private]
+        """
+        return bind_api(
+            api=self,
+            method='POST',
+            path='/illust/bookmark/add',
+            payload_list=False,
+            require_auth=True,
+            allowed_param=['illust_id', 'restrict'],
+            require_param=['illust_id', 'restrict'],
+            default_param={
+                'restrict': 'public'
+            }
+        )
+
+    @property
+    def illust_bookmark_delete(self):
+        u""" イラストお気に入り削除
+        :param illust_id: イラストID
+        """
+        return bind_api(
+            api=self,
+            method='POST',
+            path='/illust/bookmark/delete',
+            payload_list=False,
+            require_auth=True,
+            allowed_param=['illust_id'],
+            require_param=['illust_id'],
             default_param={}
         )
