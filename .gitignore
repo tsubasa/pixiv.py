@@ -1,16 +1,20 @@
-# file
-_*
-!__*
-
-# exts
-*.ini
-*.cfg
-*.inc.php
-*.log
-*.org
+# Python
 *.py[cod]
-!.gitignore
-!.gitkeep
+__pycache__
 
-# dir
-,/
+# Common IDEs
+*.swp
+.idea/
+.buildpath
+.project
+.settings
+
+# Project
+.python-version
+local_settings.py
+*.ini
+*.log
+
+# Project database
+*.db
+*.sqlite3

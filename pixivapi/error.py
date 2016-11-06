@@ -1,10 +1,11 @@
-# -*- coding: utf-8 -*-
+from __future__ import print_function
+
+import six
 
 class PixivError(Exception):
-    """Pixiv API exception"""
 
     def __init__(self, reason, response=None):
-        self.reason = reason
+        self.reason = six.text_type(reason)
         self.response = response
         Exception.__init__(self, reason)
 
