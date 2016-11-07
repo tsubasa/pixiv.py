@@ -38,16 +38,16 @@ class AppPixivAPITests(AppPixivAPITestCase):
 
     @tape.use_cassette('testsearchillust.json')
     def testsearchillust(self):
-        self.api.search_illust(word='オリジナル')
+        self.api.search_illust(word='original')
 
     @tape.use_cassette('testsearchnovel.json')
     def testsearchnovel(self):
-        self.api.search_novel(word='オリジナル')
+        self.api.search_novel(word='original')
 
     @tape.use_cassette('testsearchuser.json')
     def testsearchuser(self):
-        self.api.search_user(word='テスト')
+        self.api.search_user(word='test')
 
     @tape.use_cassette('testsearchautocomplete.json')
     def testsearchautocomplete(self):
-        self.api.search_autocomplete(word='テスト')
+        self.api.search_autocomplete(word='test')
