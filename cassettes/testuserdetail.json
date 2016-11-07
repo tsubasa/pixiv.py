@@ -1,0 +1,52 @@
+{
+    "version": 1,
+    "interactions": [
+        {
+            "response": {
+                "body": {
+                    "string": "{\"user\":{\"id\":10,\"name\":\"\\u99ac\\u9aa8\",\"account\":\"bacotu\",\"profile_image_urls\":{\"medium\":\"https:\\/\\/i2.pixiv.net\\/user-profile\\/img\\/2011\\/08\\/16\\/19\\/59\\/25\\/3500161_6dbc341561aadd4cbf5846ba41311e6e_170.jpg\"},\"comment\":\"\\u99ac\\u9aa8\\uff08\\u3070\\u3053\\u3064\\uff09\\u3067\\u3059\\u3002\\npixiv\\u4f5c\\u3063\\u305f\\u4eba\\n\\n\\u30d5\\u30a9\\u30ed\\u30fc\\u8ffd\\u52a0\\u3001\\u306f\\u305a\\u3059\\u306e\\u3082\\u304a\\u6c17\\u8efd\\u306b\\u3069\\u3046\\u305e\\u3002\\n\\n----\\n\\n\\u203b\\u4f55\\u304b\\u554f\\u984c\\u898b\\u3064\\u3051\\u305f\\u5834\\u5408\\u50d5\\u306b\\u30e1\\u30c3\\u30bb\\u30fc\\u30b8\\u3092\\u3059\\u308b\\u306e\\u3067\\u306f\\u306a\\u304f\\u3001\\n\\u3000\\u304a\\u554f\\u3044\\u5408\\u308f\\u305b\\u306b\\u304a\\u9858\\u3044\\u3057\\u307e\\u3059 m(_ _)m\",\"is_followed\":false},\"profile\":{\"webpage\":null,\"gender\":\"male\",\"birth\":\"\",\"region\":\"\\u65e5\\u672c \\u6771\\u4eac\\u90fd\",\"job\":\"IT\\u95a2\\u4fc2\",\"total_follow_users\":185,\"total_follower\":1715,\"total_mypixiv_users\":41,\"total_illusts\":41,\"total_manga\":3,\"total_novels\":0,\"total_illust_bookmarks_public\":382,\"background_image_url\":null,\"twitter_account\":\"\",\"twitter_url\":null,\"is_premium\":true},\"workspace\":{\"pc\":\"Win10 64bit Core i7-3770K\",\"monitor\":\"Dell ST2410\\u3000Dell 2407WFP\",\"tool\":\"ComicStudioEX\\u3000CLIP STUDIO PAINT EX\",\"scanner\":\"\",\"tablet\":\"intuos4\",\"mouse\":\"\\u30ed\\u30b8\\u30af\\u30fc\\u30eb\\u306e\\u30c8\\u30e9\\u30c3\\u30af\\u30dd\\u30fc\\u30eb\",\"printer\":\"\\u30a8\\u30d7\\u30bd\\u30f3\\u306e\\u30e2\\u30ce\\u30af\\u30ed\\u30ec\\u30fc\\u30b6\\u30fc\\u30d7\\u30ea\\u30f3\\u30bf\\u30fc\",\"desktop\":\"\",\"music\":\"\\u30cb\\u30b3\\u30cb\\u30b3\\u3084YouTube\\u3068\\u304b\\u306b\\u3042\\u308b\\u4f5c\\u696d\\u7528BGM\\u3068\\u304b\",\"desk\":\"\",\"chair\":\"\",\"comment\":\"\",\"workspace_image_url\":null}}"
+                },
+                "headers": {
+                    "X-Content-Type-Options": [
+                        "nosniff"
+                    ],
+                    "Date": [
+                        "Mon, 07 Nov 2016 04:13:54 GMT"
+                    ],
+                    "Server": [
+                        "nginx"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Vary": [
+                        "Accept-Encoding"
+                    ],
+                    "Content-Length": [
+                        "1658"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ]
+                },
+                "status": {
+                    "message": "OK",
+                    "code": 200
+                }
+            },
+            "request": {
+                "body": null,
+                "headers": {
+                    "Host": [
+                        "app-api.pixiv.net"
+                    ],
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
+                    ]
+                },
+                "method": "GET",
+                "uri": "https://app-api.pixiv.net/v1/user/detail?user_id=10"
+            }
+        }
+    ]
+}
