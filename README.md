@@ -1,6 +1,8 @@
 PixivAPI
 =========
 
+[![Build Status](https://travis-ci.org/twopon/PixivAPI.svg?branch=master)](https://travis-ci.org/twopon/PixivAPI)
+
 PixivAPIライブラリ
 
 主な機能
