@@ -38,16 +38,16 @@ auth.login('USERNAME', 'PASSWORD')
 aapi = AppPixivAPI(auth)
 
 # ユーザー詳細取得
-print(aapi.user_detail(user_id=1))
+print(aapi.user_detail(user_id=10))
 
 # 関連イラスト取得
-print(aapi.illust_related(illust_id=1))
+print(aapi.illust_related(illust_id=20))
 
 # イラストコメント取得
-print(aapi.illust_comments(illust_id=1))
+print(aapi.illust_comments(illust_id=20))
 
 # うごイラメタデータ取得
-print(aapi.ugoira_metadata(illust_id=1))
+print(aapi.ugoira_metadata(illust_id=44298467))
 
 # オートコンプリート
 print(aapi.search_autocomplete(word='ラブライブ！'))
