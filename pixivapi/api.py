@@ -167,7 +167,6 @@ class AppPixivAPI(API):
             path='/user/bookmarks/illust',
             payload_type='app_illust',
             payload_list=True,
-            require_auth=True,
             allowed_param=['user_id', 'restrict', 'offset', 'page'],
             require_param=['user_id', 'restrict'],
             default_param={
