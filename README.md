@@ -28,7 +28,7 @@ TODO
 サンプルコード
 --------------
 
-```
+```python
 auth = OAuthHandler()
 auth.login('USERNAME', 'PASSWORD')
 
@@ -95,3 +95,8 @@ for illust in AppCursor(aapi.search_illust, word='ラブライブ！').items(20)
         print('Unknown type: %s' % illust.type)
         print(illust.type)
 ```
+
+Thanks
+------
+
+Base API Framework -> [Tweepy](https://github.com/tweepy/tweepy)
