@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import time
 import unittest
-
 import vcr
-from nose import SkipTest
 
 from pixivapi import AppPixivAPI
 
@@ -15,14 +12,11 @@ tape = vcr.VCR(
     record_mode='once',
 )
 
-class AppPixivAPITestCase(unittest.TestCase):
+class PixivAPITestCase(unittest.TestCase):
     def setUp(self):
         self.api = AppPixivAPI()
 
-class AppPixivAPITests(AppPixivAPITestCase):
-
-    def test(self):
-        raise SkipTest()
+class AppPixivAPITests(PixivAPITestCase):
 
     @tape.use_cassette('testuserdetail.json')
     def testuserdetail(self):
