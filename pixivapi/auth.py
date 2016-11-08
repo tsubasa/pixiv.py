@@ -53,7 +53,7 @@ class OAuthHandler(AuthHandler):
     def refresh(self):
 
         if not self.refresh_token:
-            raise PixivError('refresh_token is not set')
+            raise PixivError('refresh_tokenが見つかりません')
 
         data = {
             'grant_type': 'refresh_token',
@@ -78,19 +78,18 @@ class OAuthHandler(AuthHandler):
         try:
             resp = requests.post(url=url, headers=headers, data=data)
         except Exception as e:
-            raise PixivError('Failed to send request: %s' % e)
+            raise PixivError('リクエストエラーが発生しました: %s' % e)
 
         if resp.status_code and not 200 <= resp.status_code < 300:
             try:
                 error_msg = resp.json()['errors']
             except Exception:
-                error_msg = 'PixivAPI error response: status code = %s' % resp.status_code
+                error_msg = 'レスポンスエラーが発生しました: status code = %s' % resp.status_code
             raise PixivError(error_msg)
 
         data = resp.json()['response']
         if data.get('token_type') != 'bearer':
-                    raise PixivError('Expected token_type to equal "bearer", '
-                                     'but got %s instead' % data.get('token_type'))
+            raise PixivError('トークンタイプがbearerではありません: %s' % data.get('token_type'))
 
         self.access_token = data.get('access_token', None)
         self.refresh_token = data.get('refresh_token', None)

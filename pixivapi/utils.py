@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from __future__ import print_function
 
 import requests
@@ -26,13 +28,13 @@ class PixivDownload(object):
         try:
             resp = requests.get(url, headers=self.headers, timeout=self.timeout, stream=True)
         except Exception as e:
-            raise PixivError('Failed to send request: %s' % e)
+            raise PixivError('リクエストエラーが発生しました: %s' % e)
 
         if resp.status_code and not 200 <= resp.status_code < 300:
             try:
                 error_msg = resp.text
             except Exception:
-                error_msg = 'PixivAPI error response: status code = %s' % resp.status_code
+                error_msg = 'レスポンスエラーが発生しました: status code = %s' % resp.status_code
             raise PixivError(error_msg)
 
         return resp.content

@@ -39,7 +39,7 @@ class PixivAPI(API):
                         }
 
         if not isinstance(self.parser, Parser):
-            raise TypeError('パーサーオブジェクトのインスタンスが異なります')
+            raise TypeError('Parserオブジェクトのインスタンスが異なります')
 
     @property
     def works(self):
@@ -121,7 +121,7 @@ class AppPixivAPI(API):
         self.headers = {'User-Agent': 'PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)'}
 
         if not isinstance(self.parser, Parser):
-            raise TypeError('パーサーオブジェクトのインスタンスが異なります')
+            raise TypeError('Parserオブジェクトのインスタンスが異なります')
 
     @property
     def user_detail(self):

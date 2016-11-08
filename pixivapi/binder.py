@@ -34,7 +34,7 @@ def bind_api(**config):
             api = self.api
 
             if self.require_auth and not api.access_token:
-                raise PixivError('Authentication required')
+                raise PixivError('ログイン認証が必要です')
 
             self.host = api.host
             self.api_root = api.api_root
@@ -76,7 +76,7 @@ def bind_api(**config):
 
             for k in self.require_param:
                 if k not in self.session.params:
-                    raise PixivError('引数が不足しています: %s' % k)
+                    raise PixivError('パラメータが不足しています: %s' % k)
 
             logger.info('PARAMS: %r', self.session.params)
 
@@ -106,13 +106,13 @@ def bind_api(**config):
                                                 full_url,
                                                 timeout=self.api.timeout)
             except Exception as e:
-                raise PixivError('Failed to send request: %s' % e)
+                raise PixivError('リクエストエラーが発生しました: %s' % e)
 
             if resp.status_code and not 200 <= resp.status_code < 300:
                 try:
                     error_msg = self.parser.parse_error(resp.text)
                 except Exception:
-                    error_msg = 'PixivAPI error response: status code = %s' % resp.status_code
+                    error_msg = 'レスポンスエラーが発生しました: status code = %s' % resp.status_code
                 raise PixivError(error_msg)
 
             if self.pagination:
