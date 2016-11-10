@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import os
 import unittest
 import vcr
 
-from pixivapi import AppPixivAPI
+from pixivapi import AppPixivAPI, OAuthHandler
+
+PIXIV_ACCESS_TOKEN = os.environ.get('PIXIV_ACCESS_TOKEN', None)
 
 tape = vcr.VCR(
     cassette_library_dir='cassettes',
@@ -14,7 +17,13 @@ tape = vcr.VCR(
 
 class PixivAPITestCase(unittest.TestCase):
     def setUp(self):
-        self.api = AppPixivAPI()
+        self.auth = create_auth()
+        self.api = AppPixivAPI(self.auth)
+
+def create_auth():
+    auth = OAuthHandler()
+    auth.set_token(PIXIV_ACCESS_TOKEN)
+    return auth
 
 class AppPixivAPITests(PixivAPITestCase):
 
@@ -50,7 +59,7 @@ class AppPixivAPITests(PixivAPITestCase):
     def testuserrecommended(self):
         self.api.user_recommended()
 
-    """@tape.use_cassette('testillustrecommended.json')
+    @tape.use_cassette('testillustrecommended.json')
     def testillustrecommended(self):
         self.api.illust_recommended()
 
@@ -60,4 +69,4 @@ class AppPixivAPITests(PixivAPITestCase):
 
     @tape.use_cassette('testnovelrecommended.json')
     def testnovelrecommended(self):
-        self.api.novel_recommended()"""
+        self.api.novel_recommended()
