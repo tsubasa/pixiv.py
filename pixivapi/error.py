@@ -6,7 +6,7 @@ class PixivError(Exception):
 
     def __init__(self, reason, response=None):
         Exception.__init__(self, reason)
-        if isinstance(reason, six.text_type):
+        if six.PY3 or isinstance(reason, six.text_type):
             self.reason = six.text_type(reason)
         elif isinstance(reason, str):
             self.reason = reason.decode('utf-8')
