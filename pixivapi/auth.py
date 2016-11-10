@@ -38,6 +38,9 @@ class OAuthHandler(AuthHandler):
     def get_token(self):
         return self.access_token, self.refresh_token
 
+    def set_token(self, access_token=None, refresh_token=None):
+        self.access_token, self.refresh_token = access_token, refresh_token
+
     def login(self, username, password):
 
         data = {
