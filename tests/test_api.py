@@ -45,3 +45,19 @@ class AppPixivAPITests(PixivAPITestCase):
     @tape.use_cassette('testsearchautocomplete.json')
     def testsearchautocomplete(self):
         self.api.search_autocomplete(word='test')
+
+    @tape.use_cassette('testuserrecommended.json')
+    def testuserrecommended(self):
+        self.api.user_recommended()
+
+    """@tape.use_cassette('testillustrecommended.json')
+    def testillustrecommended(self):
+        self.api.illust_recommended()
+
+    @tape.use_cassette('testmangarecommended.json')
+    def testmangarecommended(self):
+        self.api.manga_recommended()
+
+    @tape.use_cassette('testnovelrecommended.json')
+    def testnovelrecommended(self):
+        self.api.novel_recommended()"""

@@ -217,7 +217,6 @@ class AppPixivAPI(API):
             path='/user/related',
             payload_type='app_user',
             payload_list=True,
-            require_auth=True,
             allowed_param=['seed_user_id', 'filter'],
             require_param=['seed_user_id'],
             default_param={
@@ -380,4 +379,76 @@ class AppPixivAPI(API):
             allowed_param=['illust_id'],
             require_param=['illust_id'],
             default_param={}
+        )
+
+    @property
+    def user_recommended(self):
+        u""" ユーザーレコメンド
+        """
+        return bind_api(
+            api=self,
+            path='/user/recommended',
+            payload_type='app_user',
+            payload_list=True,
+            allowed_param=['filter'],
+            require_param=[],
+            default_param={
+                'filter': 'for_ios',
+            }
+        )
+
+    @property
+    def illust_recommended(self):
+        u""" イラストレコメンド
+        :param include_ranking_illusts: ランキングイラストを含める [True, False]
+        """
+        return bind_api(
+            api=self,
+            path='/illust/recommended',
+            payload_type='app_illust',
+            payload_list=True,
+            require_auth=True,
+            allowed_param=['include_ranking_illusts', 'filter'],
+            require_param=[],
+            default_param={
+                'include_ranking_illusts': 'true',
+                'filter': 'for_ios',
+            }
+        )
+
+    @property
+    def manga_recommended(self):
+        u""" マンガレコメンド
+        :param include_ranking_illusts: ランキングイラストを含める [True, False]
+        """
+        return bind_api(
+            api=self,
+            path='/manga/recommended',
+            payload_type='app_illust',
+            payload_list=True,
+            require_auth=True,
+            allowed_param=['include_ranking_illusts', 'filter'],
+            require_param=[],
+            default_param={
+                'include_ranking_illusts': 'true',
+                'filter': 'for_ios',
+            }
+        )
+
+    @property
+    def novel_recommended(self):
+        u""" ノベルレコメンド
+        :param include_ranking_illusts: ランキングイラストを含める [True, False]
+        """
+        return bind_api(
+            api=self,
+            path='/novel/recommended',
+            payload_type='app_novel',
+            payload_list=True,
+            require_auth=True,
+            allowed_param=['include_ranking_novels'],
+            require_param=[],
+            default_param={
+                'include_ranking_novels': 'true',
+            }
         )

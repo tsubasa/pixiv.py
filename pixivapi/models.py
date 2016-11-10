@@ -135,7 +135,11 @@ class AppIllust(Model):
     def parse_list(cls, api, json_list):
         results = ResultSet()
 
-        if 'illusts' in json_list:
+        if 'ranking_illusts' in json_list:
+            for obj in json_list['ranking_illusts']:
+                if obj:
+                    results.append(cls.parse(api, obj))
+        elif 'illusts' in json_list:
             for obj in json_list['illusts']:
                 if obj:
                     results.append(cls.parse(api, obj))
@@ -176,7 +180,11 @@ class AppNovel(Model):
     def parse_list(cls, api, json_list):
         results = ResultSet()
 
-        if 'novels' in json_list:
+        if 'ranking_novels' in json_list:
+            for obj in json_list['ranking_novels']:
+                if obj:
+                    results.append(cls.parse(api, obj))
+        elif 'novels' in json_list:
             for obj in json_list['novels']:
                 if obj:
                     results.append(cls.parse(api, obj))
