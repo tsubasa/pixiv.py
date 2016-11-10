@@ -7,4 +7,8 @@ python:
 install:
   - pip install -r requirements.txt -r test-requirements.txt
 
+env:
+  global:
+    secure: "gLuPK3Z86Ppeihv8WcUJwzPkbPS+I9217BkB0fiyEMpbUReQj15DipIu9JP+Z/sy1Rc1CFve8jG5D0+fkPr7D8YpsfNmMBljboiwbJ1DbSs4IB0UzEyP93lmUXb+FhU/8SasYAR2PeRx93F7RVHE1H5MVL/d/0AF3rNk4YofcEk="
+
 script: nosetests -v
