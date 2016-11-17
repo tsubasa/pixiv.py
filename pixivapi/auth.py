@@ -2,6 +2,8 @@
 
 from __future__ import print_function
 
+import datetime
+
 import requests
 
 from .error import PixivError
@@ -31,6 +33,7 @@ class OAuthHandler(AuthHandler):
         self.client_secret = self.CLIENT_SECRET
         self.access_token = None
         self.refresh_token = None
+        self.expires = None
 
     def _get_oauth_url(self, endpoint):
         return 'https://' + self.OAUTH_HOST + self.OAUTH_ROOT + endpoint
@@ -41,6 +44,9 @@ class OAuthHandler(AuthHandler):
     def set_token(self, access_token=None, refresh_token=None):
         self.access_token, self.refresh_token = access_token, refresh_token
 
+    def is_token_valid(self):
+        return True if self.expires and self.expires > int(datetime.datetime.now().strftime('%s')) else False
+
     def login(self, username, password):
 
         data = {
@@ -49,25 +55,26 @@ class OAuthHandler(AuthHandler):
             'password': password,
         }
 
-        return self.auth(url=self._get_oauth_url('token'),
-                         headers=self.headers,
-                         parameters=data)
+        return self.auth(url=self._get_oauth_url('token'), parameters=data)
 
     def refresh(self):
 
         if not self.refresh_token:
             raise PixivError('refresh_tokenが見つかりません')
 
+        headers = {'Authorization': 'Bearer %s' % self.access_token}
+
         data = {
             'grant_type': 'refresh_token',
             'refresh_token': self.refresh_token,
         }
 
-        return self.auth(url=self._get_oauth_url('token'),
-                         headers=self.headers,
-                         parameters=data)
+        return self.auth(url=self._get_oauth_url('token'), headers=headers, parameters=data)
 
-    def auth(self, url, headers, parameters):
+    def auth(self, url, headers={}, parameters={}):
+
+        if isinstance(headers, dict):
+            headers.update(self.headers)
 
         data = {
             'client_id': self.CLIENT_ID,
@@ -93,6 +100,11 @@ class OAuthHandler(AuthHandler):
         data = resp.json()['response']
         if data.get('token_type') != 'bearer':
             raise PixivError('トークンタイプがbearerではありません: %s' % data.get('token_type'))
+
+        for cookie in resp.cookies:
+            if cookie.name == 'PHPSESSID':
+                self.expires = cookie.expires
+                break
 
         self.access_token = data.get('access_token', None)
         self.refresh_token = data.get('refresh_token', None)

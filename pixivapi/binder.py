@@ -35,6 +35,9 @@ def bind_api(**config):
 
             if self.require_auth and not api.access_token:
                 raise PixivError('ログイン認証が必要です')
+            elif self.require_auth:
+                if not api.auth.is_token_valid():
+                    api.refresh_token()
 
             self.host = api.host
             self.api_root = api.api_root
