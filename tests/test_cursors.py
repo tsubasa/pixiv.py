@@ -1,20 +1,6 @@
-# -*- coding: utf-8 -*-
+from .config import PixivAPITestCase, tape
 
-import unittest
-import vcr
-
-from pixivapi import AppPixivAPI, AppCursor
-
-tape = vcr.VCR(
-    cassette_library_dir='cassettes',
-    filter_headers=['Authorization'],
-    serializer='json',
-    record_mode='once',
-)
-
-class PixivAPITestCase(unittest.TestCase):
-    def setUp(self):
-        self.api = AppPixivAPI()
+from pixivapi import AppCursor
 
 class AppCursorTests(PixivAPITestCase):
 

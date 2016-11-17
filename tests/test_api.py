@@ -1,29 +1,4 @@
-# -*- coding: utf-8 -*-
-
-import os
-import unittest
-import vcr
-
-from pixivapi import AppPixivAPI, OAuthHandler
-
-PIXIV_ACCESS_TOKEN = os.environ.get('PIXIV_ACCESS_TOKEN', None)
-
-tape = vcr.VCR(
-    cassette_library_dir='cassettes',
-    filter_headers=['Authorization'],
-    serializer='json',
-    record_mode='once',
-)
-
-class PixivAPITestCase(unittest.TestCase):
-    def setUp(self):
-        self.auth = create_auth()
-        self.api = AppPixivAPI(self.auth)
-
-def create_auth():
-    auth = OAuthHandler()
-    auth.set_token(PIXIV_ACCESS_TOKEN)
-    return auth
+from .config import PixivAPITestCase, tape
 
 class AppPixivAPITests(PixivAPITestCase):
 
