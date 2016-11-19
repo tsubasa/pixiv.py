@@ -1,9 +1,9 @@
-PixivAPI
-=========
+pixiv.py
+========
 
 [![Build Status](https://travis-ci.org/twopon/PixivAPI.svg?branch=master)](https://travis-ci.org/twopon/PixivAPI)
 
-PixivAPIライブラリ
+Pixiv API ライブラリ
 
 主な機能
 --------
@@ -97,7 +97,7 @@ for illust in AppCursor(aapi.search_illust, word='ラブライブ！').items(20)
         print(illust.type)
 ```
 
-Thanks
-------
+謝辞
+----
 
-Base API Framework -> [Tweepy](https://github.com/tweepy/tweepy)
+[Tweepy](https://github.com/tweepy/tweepy) - Base API Framework
