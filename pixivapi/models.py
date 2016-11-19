@@ -292,11 +292,29 @@ class AppAutoComplete(Model):
             setattr(auto_complete, k, v)
         return auto_complete
 
+class AppTag(Model):
+
+    @classmethod
+    def parse(cls, api, json):
+        tag = cls(api)
+        for k, v in json.items():
+            setattr(tag, k, v)
+        return tag
+
+    @classmethod
+    def parse_list(cls, api, json_list):
+        results = ResultSet()
+        for obj in json_list['bookmark_tags']:
+            if obj:
+                results.append(cls.parse(api, obj))
+        return results
+
 class AppModelFactory(object):
 
     app_illust = AppIllust
     app_novel = AppNovel
     app_user = AppUser
+    app_tag = AppTag
 
     app_comment = AppComment
     app_metadata = AppMetadata

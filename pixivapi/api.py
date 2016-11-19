@@ -175,6 +175,24 @@ class AppPixivAPI(API):
         )
 
     @property
+    def user_bookmark_tags_illust(self):
+        u""" ユーザーのお気に入りイラストタグ
+        :param user_id: ユーザーID
+        :param restrict: 公開／非公開 [public, private]
+        """
+        return bind_api(
+            api=self,
+            path='/user/bookmark-tags/illust',
+            payload_type='app_tag',
+            payload_list=True,
+            allowed_param=['user_id', 'restrict', 'offset', 'page'],
+            require_param=['user_id', 'restrict'],
+            default_param={
+                'restrict': 'public'
+            }
+        )
+
+    @property
     def user_follow_add(self):
         u""" ユーザーフォロー
         :param user_id: ユーザーID

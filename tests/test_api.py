@@ -14,6 +14,10 @@ class AppPixivAPITests(PixivAPITestCase):
     def testuserbookmarksillust(self):
         self.api.user_bookmarks_illust(user_id=10)
 
+    @tape.use_cassette('testuserbookmarktagsillust.json')
+    def testuserbookmarktagsillust(self):
+        self.api.user_bookmark_tags_illust(user_id=10)
+
     @tape.use_cassette('testsearchillust.json')
     def testsearchillust(self):
         self.api.search_illust(word='original')
