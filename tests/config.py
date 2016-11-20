@@ -3,7 +3,7 @@ import os
 import unittest
 import vcr
 
-from pixivapi import AppPixivAPI, OAuthHandler
+from pixiv import AppPixivAPI, OAuthHandler
 
 PIXIV_ACCESS_TOKEN = os.environ.get('PIXIV_ACCESS_TOKEN', None)
 

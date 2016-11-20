@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from pixivapi.auth import OAuthHandler
-from pixivapi.api import PixivAPI, AppPixivAPI
-from pixivapi.cursor import Cursor, AppCursor
-from pixivapi.utils import PixivDownload
+from pixiv.auth import OAuthHandler
+from pixiv.api import PixivAPI, AppPixivAPI
+from pixiv.cursor import Cursor, AppCursor
+from pixiv.utils import PixivDownload
 
 # r18作品を含める場合必須
 auth = OAuthHandler()

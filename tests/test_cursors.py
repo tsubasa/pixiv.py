@@ -1,6 +1,6 @@
 from .config import PixivAPITestCase, tape
 
-from pixivapi import AppCursor
+from pixiv import AppCursor
 
 class AppCursorTests(PixivAPITestCase):
 
