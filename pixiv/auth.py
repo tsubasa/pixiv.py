@@ -34,6 +34,7 @@ class OAuthHandler(AuthHandler):
         self.access_token = None
         self.refresh_token = None
         self.expires = None
+        self.user_id = None
 
     def _get_oauth_url(self, endpoint):
         return 'https://' + self.OAUTH_HOST + self.OAUTH_ROOT + endpoint
@@ -108,5 +109,6 @@ class OAuthHandler(AuthHandler):
 
         self.access_token = data.get('access_token', None)
         self.refresh_token = data.get('refresh_token', None)
+        self.user_id = data.get('user').get('id', None)
 
         return self.access_token, self.refresh_token

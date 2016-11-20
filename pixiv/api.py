@@ -135,7 +135,9 @@ class AppPixivAPI(API):
             payload_list=False,
             allowed_param=['user_id'],
             require_param=['user_id'],
-            default_param={}
+            default_param={
+                'user_id': self.auth.user_id,
+            }
         )
 
     @property
@@ -152,6 +154,7 @@ class AppPixivAPI(API):
             allowed_param=['user_id', 'filter', 'type'],
             require_param=['user_id'],
             default_param={
+                'user_id': self.auth.user_id,
                 'filter': 'for_ios',
             }
         )
@@ -170,6 +173,7 @@ class AppPixivAPI(API):
             allowed_param=['user_id', 'restrict', 'offset', 'page'],
             require_param=['user_id', 'restrict'],
             default_param={
+                'user_id': self.auth.user_id,
                 'restrict': 'public'
             }
         )
@@ -188,6 +192,7 @@ class AppPixivAPI(API):
             allowed_param=['user_id', 'restrict', 'offset', 'page'],
             require_param=['user_id', 'restrict'],
             default_param={
+                'user_id': self.auth.user_id,
                 'restrict': 'public'
             }
         )
