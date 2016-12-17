@@ -1,7 +1,7 @@
 pixiv.py
 ========
 
-[![Build Status](https://travis-ci.org/twopon/PixivAPI.svg?branch=master)](https://travis-ci.org/twopon/PixivAPI)
+[![Build Status](https://travis-ci.org/twopon/pixiv.py.svg?branch=master)](https://travis-ci.org/twopon/pixiv.py)
 
 Pixiv API ライブラリ
 
