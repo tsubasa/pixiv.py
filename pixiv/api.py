@@ -374,14 +374,16 @@ class AppPixivAPI(API):
         u""" イラストお気に入り追加
         :param illust_id: イラストID
         :param restrict: 公開／非公開 [public, private]
+        :param tags: イラストタグ
         """
         return bind_api(
             api=self,
+            api_root='/v2',
             method='POST',
             path='/illust/bookmark/add',
             payload_list=False,
             require_auth=True,
-            allowed_param=['illust_id', 'restrict'],
+            allowed_param=['illust_id', 'restrict', 'tags'],
             require_param=['illust_id', 'restrict'],
             default_param={
                 'restrict': 'public'

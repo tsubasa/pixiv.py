@@ -20,6 +20,7 @@ def bind_api(**config):
     class APIMethod(object):
 
         api = config['api']
+        api_root = config.get('api_root', None)
         path = config['path']
         payload_type = config.get('payload_type', None)
         payload_list = config.get('payload_list', False)
@@ -40,7 +41,8 @@ def bind_api(**config):
                     api.refresh_token()
 
             self.host = api.host
-            self.api_root = api.api_root
+            if not self.api_root:
+                self.api_root = api.api_root
 
             self.parser = kwargs.pop('parser', api.parser)
             self.pagination = kwargs.pop('pagination', False)
