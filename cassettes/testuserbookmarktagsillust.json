@@ -1,26 +1,21 @@
 {
+    "version": 1,
     "interactions": [
         {
-            "request": {
-                "body": null,
-                "uri": "https://app-api.pixiv.net/v1/user/bookmark-tags/illust?user_id=10&restrict=public",
-                "headers": {
-                    "User-Agent": [
-                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
-                    ],
-                    "Host": [
-                        "app-api.pixiv.net"
-                    ]
-                },
-                "method": "GET"
-            },
             "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
                 "body": {
                     "string": "{\"bookmark_tags\":[{\"name\":\"ACONY\",\"count\":1},{\"name\":\"Myself;Yourself\",\"count\":1},{\"name\":\"NieR:Automata\",\"count\":3},{\"name\":\"VOCALOID\",\"count\":8},{\"name\":\"pixivTouch\",\"count\":4},{\"name\":\"\\u3042\\u306e\\u65e5\\u898b\\u305f\\u82b1\\u306e\\u540d\\u524d\\u3092\\u50d5\\u9054\\u306f\\u307e\\u3060\\u77e5\\u3089\\u306a\\u3044\\u3002\",\"count\":1},{\"name\":\"\\u304b\\u3093\\u306a\\u304e\",\"count\":4},{\"name\":\"\\u3051\\u3044\\u304a\\u3093!\",\"count\":2},{\"name\":\"\\u3051\\u3044\\u304a\\u3093!!\",\"count\":1},{\"name\":\"\\u3057\\u3085\\u3054\\u30ad\\u30e3\\u30e9\",\"count\":4},{\"name\":\"\\u305f\\u307e\\u3053\\u307e\\u30fc\\u3051\\u3063\\u3068\",\"count\":1},{\"name\":\"\\u3068\\u3042\\u308b\\u79d1\\u5b66\\u306e\\u8d85\\u96fb\\u78c1\\u7832\",\"count\":1},{\"name\":\"\\u307e\\u304a\\u3086\\u3046\",\"count\":2},{\"name\":\"\\u307e\\u3069\\u304b\\u2606\\u30de\\u30ae\\u30ab500users\\u5165\\u308a\",\"count\":1},{\"name\":\"\\u307e\\u308a\\u3042\\u2020\\u307b\\u308a\\u3063\\u304f\",\"count\":2},{\"name\":\"\\u3086\\u308b\\u3086\\u308a\",\"count\":2},{\"name\":\"\\u30a2\\u30a4\\u30ab\\u30c4!\",\"count\":2},{\"name\":\"\\u30a2\\u30a4\\u30c9\\u30eb\\u30de\\u30b9\\u30bf\\u30fc\",\"count\":3},{\"name\":\"\\u30a2\\u30b9\\u30ab\",\"count\":1},{\"name\":\"\\u30a2\\u30fc\\u30af\\u30b6\\u30e9\\u30c3\\u30c9\",\"count\":1},{\"name\":\"\\u30a4\\u30f3\\u30d5\\u30a3\\u30cb\\u30c3\\u30c8\\u30fb\\u30b9\\u30c8\\u30e9\\u30c8\\u30b9\",\"count\":1},{\"name\":\"\\u30a8\\u30a6\\u30ec\\u30ab\",\"count\":6},{\"name\":\"\\u30a8\\u30af\\u30ea\\u30c3\\u30d7\\u30b9\",\"count\":1},{\"name\":\"\\u30a8\\u30ec\\u30e1\\u30f3\\u30c8\\u30cf\\u30f3\\u30bf\\u30fc\",\"count\":6},{\"name\":\"\\u30a8\\u30f4\\u30a1\",\"count\":1},{\"name\":\"\\u30a8\\u30f4\\u30a1\\u30f3\\u30b2\\u30ea\\u30aa\\u30f3\",\"count\":1},{\"name\":\"\\u30aa\\u30ea\\u30b8\\u30ca\\u30eb\",\"count\":49},{\"name\":\"\\u30b4\\u30b7\\u30c3\\u30af\",\"count\":1},{\"name\":\"\\u30b4\\u30b7\\u30c3\\u30af\\u30ed\\u30ea\\u30fc\\u30bf\",\"count\":1},{\"name\":\"\\u30b4\\u30b9\",\"count\":27}],\"next_url\":\"https:\\/\\/app-api.pixiv.net\\/v1\\/user\\/bookmark-tags\\/illust?user_id=10\\u0026restrict=public\\u0026offset=30\"}"
                 },
                 "headers": {
-                    "Content-Length": [
-                        "1855"
+                    "X-Content-Type-Options": [
+                        "nosniff"
+                    ],
+                    "Server": [
+                        "nginx"
                     ],
                     "Content-Type": [
                         "application/json; charset=utf-8"
@@ -28,25 +23,124 @@
                     "Vary": [
                         "Accept-Encoding"
                     ],
+                    "Date": [
+                        "Sat, 19 Nov 2016 01:39:03 GMT"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "1855"
+                    ]
+                }
+            },
+            "request": {
+                "method": "GET",
+                "headers": {
+                    "Host": [
+                        "app-api.pixiv.net"
+                    ],
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
+                    ]
+                },
+                "uri": "https://app-api.pixiv.net/v1/user/bookmark-tags/illust?user_id=10&restrict=public",
+                "body": null
+            }
+        },
+        {
+            "response": {
+                "status": {
+                    "code": 400,
+                    "message": "Bad Request"
+                },
+                "body": {
+                    "string": "{\"error\":{\"user_message\":\"\",\"message\":\"Error occurred at the OAuth process. Please check your Access Token to fix this. Error Message: invalid_request\",\"reason\":\"\",\"user_message_details\":{}}}"
+                },
+                "headers": {
+                    "X-Content-Type-Options": [
+                        "nosniff"
+                    ],
                     "Server": [
                         "nginx"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Vary": [
+                        "Accept-Encoding"
+                    ],
+                    "Date": [
+                        "Sat, 11 Feb 2017 09:19:55 GMT"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "191"
+                    ]
+                }
+            },
+            "request": {
+                "method": "GET",
+                "headers": {
+                    "Host": [
+                        "app-api.pixiv.net"
+                    ],
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
+                    ]
+                },
+                "uri": "https://app-api.pixiv.net/v1/user/bookmark-tags/illust?user_id=10&restrict=public",
+                "body": null
+            }
+        },
+        {
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "body": {
+                    "string": "{\"bookmark_tags\":[{\"name\":\"ACONY\",\"count\":1},{\"name\":\"Myself;Yourself\",\"count\":1},{\"name\":\"NieR:Automata\",\"count\":3},{\"name\":\"VOCALOID\",\"count\":8},{\"name\":\"pixivTouch\",\"count\":4},{\"name\":\"\\u3042\\u306e\\u65e5\\u898b\\u305f\\u82b1\\u306e\\u540d\\u524d\\u3092\\u50d5\\u9054\\u306f\\u307e\\u3060\\u77e5\\u3089\\u306a\\u3044\\u3002\",\"count\":1},{\"name\":\"\\u304b\\u3093\\u306a\\u304e\",\"count\":4},{\"name\":\"\\u3051\\u3044\\u304a\\u3093!\",\"count\":2},{\"name\":\"\\u3051\\u3044\\u304a\\u3093!!\",\"count\":1},{\"name\":\"\\u3057\\u3085\\u3054\\u30ad\\u30e3\\u30e9\",\"count\":4},{\"name\":\"\\u305f\\u307e\\u3053\\u307e\\u30fc\\u3051\\u3063\\u3068\",\"count\":1},{\"name\":\"\\u3068\\u3042\\u308b\\u79d1\\u5b66\\u306e\\u8d85\\u96fb\\u78c1\\u7832\",\"count\":1},{\"name\":\"\\u307e\\u304a\\u3086\\u3046\",\"count\":2},{\"name\":\"\\u307e\\u3069\\u304b\\u2606\\u30de\\u30ae\\u30ab500users\\u5165\\u308a\",\"count\":1},{\"name\":\"\\u307e\\u308a\\u3042\\u2020\\u307b\\u308a\\u3063\\u304f\",\"count\":2},{\"name\":\"\\u3086\\u308b\\u3086\\u308a\",\"count\":2},{\"name\":\"\\u30a2\\u30a4\\u30ab\\u30c4!\",\"count\":2},{\"name\":\"\\u30a2\\u30a4\\u30c9\\u30eb\\u30de\\u30b9\\u30bf\\u30fc\",\"count\":3},{\"name\":\"\\u30a2\\u30b9\\u30ab\",\"count\":1},{\"name\":\"\\u30a2\\u30fc\\u30af\\u30b6\\u30e9\\u30c3\\u30c9\",\"count\":1},{\"name\":\"\\u30a4\\u30f3\\u30d5\\u30a3\\u30cb\\u30c3\\u30c8\\u30fb\\u30b9\\u30c8\\u30e9\\u30c8\\u30b9\",\"count\":1},{\"name\":\"\\u30a8\\u30a6\\u30ec\\u30ab\",\"count\":6},{\"name\":\"\\u30a8\\u30af\\u30ea\\u30c3\\u30d7\\u30b9\",\"count\":1},{\"name\":\"\\u30a8\\u30ec\\u30e1\\u30f3\\u30c8\\u30cf\\u30f3\\u30bf\\u30fc\",\"count\":6},{\"name\":\"\\u30a8\\u30f4\\u30a1\",\"count\":1},{\"name\":\"\\u30a8\\u30f4\\u30a1\\u30f3\\u30b2\\u30ea\\u30aa\\u30f3\",\"count\":1},{\"name\":\"\\u30aa\\u30ea\\u30b8\\u30ca\\u30eb\",\"count\":49},{\"name\":\"\\u30b4\\u30b7\\u30c3\\u30af\",\"count\":1},{\"name\":\"\\u30b4\\u30b7\\u30c3\\u30af\\u30ed\\u30ea\\u30fc\\u30bf\",\"count\":1},{\"name\":\"\\u30b4\\u30b9\",\"count\":27}],\"next_url\":\"https:\\/\\/app-api.pixiv.net\\/v1\\/user\\/bookmark-tags\\/illust?user_id=10\\u0026restrict=public\\u0026offset=30\"}"
+                },
+                "headers": {
+                    "X-Content-Type-Options": [
+                        "nosniff"
+                    ],
+                    "Server": [
+                        "nginx"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Vary": [
+                        "Accept-Encoding"
+                    ],
+                    "Content-Length": [
+                        "1855"
                     ],
                     "Connection": [
                         "keep-alive"
                     ],
                     "Date": [
-                        "Sat, 19 Nov 2016 01:39:03 GMT"
+                        "Sat, 11 Feb 2017 09:22:00 GMT"
+                    ]
+                }
+            },
+            "request": {
+                "method": "GET",
+                "headers": {
+                    "Host": [
+                        "app-api.pixiv.net"
                     ],
-                    "X-Content-Type-Options": [
-                        "nosniff"
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
                     ]
                 },
-                "status": {
-                    "code": 200,
-                    "message": "OK"
-                }
+                "uri": "https://app-api.pixiv.net/v1/user/bookmark-tags/illust?user_id=10&restrict=public",
+                "body": null
             }
         }
-    ],
-    "version": 1
+    ]
 }

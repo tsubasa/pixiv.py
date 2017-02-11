@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "interactions": [
         {
             "response": {
@@ -10,17 +11,11 @@
                     "string": "{\"search_auto_complete_keywords\":[\"test\"]}"
                 },
                 "headers": {
-                    "Connection": [
-                        "keep-alive"
-                    ],
-                    "Content-Length": [
-                        "42"
+                    "X-Content-Type-Options": [
+                        "nosniff"
                     ],
                     "Server": [
                         "nginx"
-                    ],
-                    "X-Content-Type-Options": [
-                        "nosniff"
                     ],
                     "Content-Type": [
                         "application/json; charset=utf-8"
@@ -30,23 +25,122 @@
                     ],
                     "Date": [
                         "Mon, 07 Nov 2016 04:23:56 GMT"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "42"
                     ]
                 }
             },
             "request": {
-                "uri": "https://app-api.pixiv.net/v1/search/autocomplete?word=test",
                 "method": "GET",
                 "headers": {
-                    "User-Agent": [
-                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
-                    ],
                     "Host": [
                         "app-api.pixiv.net"
+                    ],
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
                     ]
                 },
+                "uri": "https://app-api.pixiv.net/v1/search/autocomplete?word=test",
+                "body": null
+            }
+        },
+        {
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "body": {
+                    "string": "{\"search_auto_complete_keywords\":[\"test\",\"testtest\"]}"
+                },
+                "headers": {
+                    "X-Content-Type-Options": [
+                        "nosniff"
+                    ],
+                    "Server": [
+                        "nginx"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Vary": [
+                        "Accept-Encoding"
+                    ],
+                    "Date": [
+                        "Sat, 11 Feb 2017 09:19:54 GMT"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Content-Length": [
+                        "53"
+                    ]
+                }
+            },
+            "request": {
+                "method": "GET",
+                "headers": {
+                    "Host": [
+                        "app-api.pixiv.net"
+                    ],
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
+                    ]
+                },
+                "uri": "https://app-api.pixiv.net/v1/search/autocomplete?word=test",
+                "body": null
+            }
+        },
+        {
+            "response": {
+                "status": {
+                    "code": 200,
+                    "message": "OK"
+                },
+                "body": {
+                    "string": "{\"search_auto_complete_keywords\":[\"test\",\"testtest\"]}"
+                },
+                "headers": {
+                    "X-Content-Type-Options": [
+                        "nosniff"
+                    ],
+                    "Server": [
+                        "nginx"
+                    ],
+                    "Content-Type": [
+                        "application/json; charset=utf-8"
+                    ],
+                    "Vary": [
+                        "Accept-Encoding"
+                    ],
+                    "Content-Length": [
+                        "53"
+                    ],
+                    "Connection": [
+                        "keep-alive"
+                    ],
+                    "Date": [
+                        "Sat, 11 Feb 2017 09:21:59 GMT"
+                    ]
+                }
+            },
+            "request": {
+                "method": "GET",
+                "headers": {
+                    "Host": [
+                        "app-api.pixiv.net"
+                    ],
+                    "User-Agent": [
+                        "PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)"
+                    ]
+                },
+                "uri": "https://app-api.pixiv.net/v1/search/autocomplete?word=test",
                 "body": null
             }
         }
-    ],
-    "version": 1
+    ]
 }
