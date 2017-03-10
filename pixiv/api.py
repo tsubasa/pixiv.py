@@ -344,6 +344,7 @@ class AppPixivAPI(API):
         """
         return bind_api(
             api=self,
+            api_root='/v2',
             path='/illust/related',
             payload_type='app_illust',
             payload_list=True,
