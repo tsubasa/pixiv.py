@@ -27,6 +27,21 @@ print(aapi.illust_comments(illust_id=20))
 # うごイラメタデータ取得
 print(aapi.ugoira_metadata(illust_id=44298467))
 
+# イラストお気に入り追加
+aapi.illust_bookmark_add(illust_id=20)
+
+# イラストお気に入り削除
+aapi.illust_bookmark_delete(illust_id=20)
+
+# 小説取得
+print(aapi.novel_text(novel_id=129))
+
+# 小説お気に入り追加
+aapi.novel_bookmark_add(novel_id=129)
+
+# 小説お気に入り削除
+aapi.novel_bookmark_delete(novel_id=129)
+
 # オートコンプリート
 print(aapi.search_autocomplete(word='ラブライブ！'))
 

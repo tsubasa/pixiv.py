@@ -58,16 +58,19 @@ class OAuthHandler(AuthHandler):
 
         return self.auth(url=self._get_oauth_url('token'), parameters=data)
 
-    def refresh(self):
+    def refresh(self, refresh_token=None):
 
-        if not self.refresh_token:
-            raise PixivError('refresh_tokenが見つかりません')
+        if not refresh_token:
+            if not self.refresh_token:
+                raise PixivError('refresh_tokenが見つかりません')
+            else:
+                refresh_token = self.refresh_token
 
         headers = {'Authorization': 'Bearer %s' % self.access_token}
 
         data = {
             'grant_type': 'refresh_token',
-            'refresh_token': self.refresh_token,
+            'refresh_token': refresh_token,
         }
 
         return self.auth(url=self._get_oauth_url('token'), headers=headers, parameters=data)
@@ -102,10 +105,13 @@ class OAuthHandler(AuthHandler):
         if data.get('token_type') != 'bearer':
             raise PixivError('トークンタイプがbearerではありません: %s' % data.get('token_type'))
 
-        for cookie in resp.cookies:
-            if cookie.name == 'PHPSESSID':
-                self.expires = cookie.expires
-                break
+        if 'expires_in' in data:
+            self.expires = data.get('expires_in') + int(datetime.datetime.now().strftime('%s'))
+        else:
+            for cookie in resp.cookies:
+                if cookie.name == 'PHPSESSID':
+                    self.expires = cookie.expires
+                    break
 
         self.access_token = data.get('access_token', None)
         self.refresh_token = data.get('refresh_token', None)

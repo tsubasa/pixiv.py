@@ -172,6 +172,12 @@ class AppNovel(Model):
         for k, v in json.items():
             if k == 'user':
                 setattr(novel, k, AppUser.parse(api, v))
+            elif k == 'series':
+                setattr(novel, k, AppSeries.parse(api, v))
+            elif k == 'series_prev':
+                setattr(novel, k, AppNovel.parse(api, v))
+            elif k == 'series_next':
+                setattr(novel, k, AppNovel.parse(api, v))
             else:
                 setattr(novel, k, v)
         return novel
@@ -207,6 +213,15 @@ class AppNovel(Model):
             return result
 
         return not result
+
+class AppSeries(Model):
+
+    @classmethod
+    def parse(cls, api, json):
+        series = cls(api)
+        for k, v in json.items():
+            setattr(series, k, v)
+        return series
 
 class AppUser(Model):
 

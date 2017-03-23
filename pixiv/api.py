@@ -20,8 +20,8 @@ class API(object):
     def login(self, username, password):
         self.access_token, self.refresh_token = self.auth.login(username, password)
 
-    def refresh_token(self, refresh_token):
-        self.access_token, self.refresh_token = self.auth.refresh_token(refresh_token=self.refresh_token)
+    def refresh(self):
+        self.access_token, self.refresh_token = self.auth.refresh(refresh_token=self.refresh_token)
 
 class PixivAPI(API):
     """Pixiv Public API"""
@@ -463,7 +463,7 @@ class AppPixivAPI(API):
 
     @property
     def novel_recommended(self):
-        u""" ノベルレコメンド
+        u""" 小説レコメンド
         :param include_ranking_illusts: ランキングイラストを含める [True, False]
         """
         return bind_api(
@@ -477,4 +477,57 @@ class AppPixivAPI(API):
             default_param={
                 'include_ranking_novels': 'true',
             }
+        )
+
+    @property
+    def novel_text(self):
+        u""" 小説取得
+        :param novel_id: ノベルID
+        """
+        return bind_api(
+            api=self,
+            path='/novel/text',
+            payload_type='app_novel',
+            payload_list=False,
+            require_auth=False,
+            allowed_param=['novel_id'],
+            require_param=[],
+            default_param={}
+        )
+
+    @property
+    def novel_bookmark_add(self):
+        u""" 小説お気に入り追加
+        :param novel_id: 小説ID
+        :param restrict: 公開／非公開 [public, private]
+        :param tags: 小説タグ
+        """
+        return bind_api(
+            api=self,
+            api_root='/v2',
+            method='POST',
+            path='/novel/bookmark/add',
+            payload_list=False,
+            require_auth=True,
+            allowed_param=['novel_id', 'restrict', 'tags'],
+            require_param=['novel_id', 'restrict'],
+            default_param={
+                'restrict': 'public'
+            }
+        )
+
+    @property
+    def novel_bookmark_delete(self):
+        u""" 小説お気に入り削除
+        :param novel_id: 小説ID
+        """
+        return bind_api(
+            api=self,
+            method='POST',
+            path='/novel/bookmark/delete',
+            payload_list=False,
+            require_auth=True,
+            allowed_param=['novel_id'],
+            require_param=['novel_id'],
+            default_param={}
         )

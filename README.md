@@ -9,22 +9,21 @@ Pixiv API ライブラリ
 --------
 
 - イラスト検索
-- イラスト情報取得
 - イラストお気に入り追加/解除
-- ユーザー検索
+- ユーザー検索 (search/user)
 - ユーザー情報取得
 - ユーザーフォロー/フォロー解除
 - ユーザーお気に入りイラスト取得/削除
 - ユーザーお気に入りイラストタグ取得
 - ユーザー/イラスト/マンガ/小説レコメンド取得
 - 小説検索
+- 小説詳細取得
+- 小説お気に入り追加/解除
 
 TODO
 ----
 
-- 小説詳細取得 (novel/text)
-- 小説シリーズ取得 (novel/series)
-- 小説お気に入り追加/解除  (novel/add, novel/delete)
+- 小説タグ解析
 
 サンプルコード
 --------------
@@ -49,6 +48,9 @@ print(aapi.illust_comments(illust_id=20))
 
 # うごイラメタデータ取得
 print(aapi.ugoira_metadata(illust_id=44298467))
+
+# 小説取得
+print(aapi.novel_text(novel_id=129))
 
 # オートコンプリート
 print(aapi.search_autocomplete(word='ラブライブ！'))
