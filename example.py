@@ -18,6 +18,9 @@ aapi = AppPixivAPI(auth)
 # ユーザー詳細取得
 print(aapi.user_detail(user_id=10))
 
+# イラスト詳細取得
+print(aapi.illust_detail(illust_id=20))
+
 # 関連イラスト取得
 print(aapi.illust_related(illust_id=20))
 

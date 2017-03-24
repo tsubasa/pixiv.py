@@ -3,11 +3,12 @@ pixiv.py
 
 [![Build Status](https://travis-ci.org/twopon/pixiv.py.svg?branch=master)](https://travis-ci.org/twopon/pixiv.py)
 
-Pixiv API ライブラリ
+pixiv API ライブラリ for Python
 
 主な機能
 --------
 
+- イラスト詳細取得
 - イラスト検索
 - イラストお気に入り追加/解除
 - ユーザー検索 (search/user)
@@ -37,8 +38,8 @@ auth.login('USERNAME', 'PASSWORD')
 #
 aapi = AppPixivAPI(auth)
 
-# ユーザー詳細取得
-print(aapi.user_detail(user_id=10))
+# イラスト詳細取得
+print(aapi.illust_detail(illust_id=20))
 
 # 関連イラスト取得
 print(aapi.illust_related(illust_id=20))
@@ -51,6 +52,9 @@ print(aapi.ugoira_metadata(illust_id=44298467))
 
 # 小説取得
 print(aapi.novel_text(novel_id=129))
+
+# ユーザー詳細取得
+print(aapi.user_detail(user_id=10))
 
 # オートコンプリート
 print(aapi.search_autocomplete(word='ラブライブ！'))

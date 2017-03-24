@@ -338,6 +338,23 @@ class AppPixivAPI(API):
         )
 
     @property
+    def illust_detail(self):
+        u""" イラスト詳細取得
+        :param illust_id: イラストID
+        """
+        return bind_api(
+            api=self,
+            api_root='/v1',
+            path='/illust/detail',
+            payload_type='app_illust',
+            payload_list=False,
+            allowed_param=['illust_id'],
+            require_param=['illust_id'],
+            default_param={
+            }
+        )
+
+    @property
     def illust_related(self):
         u""" 関連イラスト
         :param illust_id: イラストID

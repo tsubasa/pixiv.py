@@ -2,6 +2,10 @@ from .config import PixivAPITestCase, tape
 
 class AppPixivAPITests(PixivAPITestCase):
 
+    @tape.use_cassette('testillustdetail.json')
+    def testillustdetail(self):
+        self.api.illust_detail(illust_id=20)
+
     @tape.use_cassette('testuserdetail.json')
     def testuserdetail(self):
         self.api.user_detail(user_id=10)
