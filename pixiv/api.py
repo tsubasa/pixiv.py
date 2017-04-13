@@ -118,7 +118,7 @@ class AppPixivAPI(API):
         self.timeout = timeout
         self.parser = parser or AppModelParser()
 
-        self.headers = {'User-Agent': 'PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)'}
+        self.headers = {'User-Agent': 'PixivIOSApp/6.7.1 (iOS 9.3.3; iPhone8,4)'}
 
         if not isinstance(self.parser, Parser):
             raise TypeError('Parserオブジェクトのインスタンスが異なります')

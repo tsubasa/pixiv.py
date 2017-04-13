@@ -25,8 +25,8 @@ class OAuthHandler(AuthHandler):
         self.headers = {
             'App-OS': 'ios',
             'App-OS-Version': '9.3.3',
-            'App-Version': '6.2.1',
-            'User-Agent': 'PixivIOSApp/6.2.1 (iOS 9.0.2; iPhone6,1)',
+            'App-Version': '6.7.1',
+            'User-Agent': 'PixivIOSApp/6.7.1 (iOS 9.3.3; iPhone8,4)',
         }
 
         self.client_id = self.CLIENT_ID
