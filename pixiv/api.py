@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+from . import APP_VERSION
 from .auth import OAuthHandler
 from .binder import bind_api
 from .parsers import Parser, ModelParser, AppModelParser
@@ -118,7 +119,7 @@ class AppPixivAPI(API):
         self.timeout = timeout
         self.parser = parser or AppModelParser()
 
-        self.headers = {'User-Agent': 'PixivIOSApp/6.7.1 (iOS 9.3.3; iPhone8,4)'}
+        self.headers = {'User-Agent': 'PixivIOSApp/%s (iOS 9.3.3; iPhone8,4)' % APP_VERSION}
 
         if not isinstance(self.parser, Parser):
             raise TypeError('Parserオブジェクトのインスタンスが異なります')

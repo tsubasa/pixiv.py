@@ -6,6 +6,7 @@ import datetime
 
 import requests
 
+from . import APP_VERSION
 from .error import PixivError
 
 class AuthHandler(object):
@@ -24,9 +25,9 @@ class OAuthHandler(AuthHandler):
     def __init__(self, username=None, password=None, refresh_token=None):
         self.headers = {
             'App-OS': 'ios',
-            'App-OS-Version': '9.3.3',
+            'App-OS-Version': APP_VERSION,
             'App-Version': '6.7.1',
-            'User-Agent': 'PixivIOSApp/6.7.1 (iOS 9.3.3; iPhone8,4)',
+            'User-Agent': 'PixivIOSApp/%s (iOS 9.3.3; iPhone8,4)' % APP_VERSION,
         }
 
         self.client_id = self.CLIENT_ID
