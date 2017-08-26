@@ -36,7 +36,7 @@ class PixivAPI(API):
         self.parser = parser or ModelParser()
 
         self.headers = {'Referer': 'http://spapi.pixiv.net/',
-                        'User-Agent': 'PixivIOSApp/6.8.5',
+                        'User-Agent': 'PixivIOSApp/5.8.7',
                         }
 
         if not isinstance(self.parser, Parser):
