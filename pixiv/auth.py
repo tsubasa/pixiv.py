@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-import datetime
+import time
 
 import requests
 
@@ -47,7 +47,7 @@ class OAuthHandler(AuthHandler):
         self.access_token, self.refresh_token = access_token, refresh_token
 
     def is_token_valid(self):
-        return True if self.expires and self.expires > int(datetime.datetime.now().strftime('%s')) else False
+        return True if self.expires and self.expires > int(time.time()) else False
 
     def login(self, username, password):
 
@@ -107,7 +107,8 @@ class OAuthHandler(AuthHandler):
             raise PixivError('トークンタイプがbearerではありません: %s' % data.get('token_type'))
 
         if 'expires_in' in data:
-            self.expires = data.get('expires_in') + int(datetime.datetime.now().strftime('%s'))
+            self.expires = data.get('expires_in') + int(time.time())
+
         else:
             for cookie in resp.cookies:
                 if cookie.name == 'PHPSESSID':
